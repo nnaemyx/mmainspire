@@ -1,6 +1,9 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -8,6 +11,64 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [focusedInput, setFocusedInput] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const router = useRouter();
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!name) {
+      newErrors.name = "Name is required";
+    }
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)
+    ) {
+      newErrors.email= "Invalid email address";
+    }
+    if (!phone) {
+      newErrors.phone = "Phone number is required";
+    }
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        const res = await fetch("/api/auth/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: name,
+              email: email,
+              password: password,
+              phone: phone,
+            }),
+          });
+          if (res.ok) {
+            toast.success("Registration successful");
+            router.push("/");
+          } else if (res.status === 422) {
+            const data = await res.json();
+            setErrors(data.message);
+          } else {
+            console.error("Signup failed:", res.statusText);
+          }
+      } catch (error) {
+        toast.error("An error occurred during registration");
+      }
+    }
+  };
 
   const handleInputClick = (inputName) => {
     setFocusedInput(inputName);
@@ -21,20 +82,21 @@ const Register = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="mx-auto text-center px-8 md:px-0">
+      <div className="mx-auto text-center w-full px-8">
         <div>
-          <h1 className="font-futura text-[30px] md:text-[48px] text-light mt-[140px] ">
+          <h1 className="font-futura text-[30px] font-semibold md:text-[48px] text-light mt-[140px] ">
             REGISTER
           </h1>
           <p className="mt-[14px] text-[14px] text-[#2E2E2E] font-opensans md:text-[15px]">
             Please fill in the fields below:
           </p>
         </div>
-        <form className="font-opensans mt-[44px]">
+        <form onSubmit={handleSubmit} className="font-opensans mx-auto md:max-w-[478px] w-auto mt-[44px]">
           <div className="w-full relative">
             <input
               type="text"
               placeholder=" "
+              value={name}
               className={`focus:outline-none w-[100%] border border-solid px-[18px] py-[18px] ${
                 focusedInput === "name"
                   ? "border-dark border-[1.5px]"
@@ -54,9 +116,11 @@ const Register = () => {
               Name
             </label>
           </div>
+          {errors.name && <p className="px-6 text-red-500 font-opensans">{errors.name}</p>}
           <div className="mt-4 relative">
             <input
               type="email"
+              value={email}
               placeholder=" "
               className={`focus:outline-none w-[100%] border border-solid px-[18px] py-[18px] ${
                 focusedInput === "email"
@@ -77,9 +141,11 @@ const Register = () => {
               Email
             </label>
           </div>
+          {errors.email && <p className="px-6 text-red-500 font-opensans">{errors.email}</p>}
           <div className="mt-4 relative">
             <input
               type="number"
+              value={phone}
               placeholder=" "
               className={`focus:outline-none w-[100%] border border-solid px-[18px] py-[18px] ${
                 focusedInput === "phone"
@@ -100,9 +166,11 @@ const Register = () => {
               Phone No
             </label>
           </div>
+          {errors.phone && <p className="px-6 text-red-500 font-opensans">{errors.phone}</p>}
           <div className="mt-4 relative">
             <input
               type="password"
+              value={password}
               placeholder=" "
               className={`focus:outline-none w-[100%] border border-solid px-[18px] py-[18px] ${
                 focusedInput === "password"
@@ -123,7 +191,9 @@ const Register = () => {
               Password
             </label>
           </div>
+          {errors.password && <p className="px-6 text-red-500 font-opensans">{errors.password}</p>}
           <button
+          type="submit"
             className="mt-[24px]  text-[12px] md:text-[14px] font-semibold bg-dark text-white px-[0px] tracking-[1.5px] py-[18px] w-full"
           >
             CREATE ACCOUNT

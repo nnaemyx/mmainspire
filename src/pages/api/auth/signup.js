@@ -5,6 +5,7 @@ import Cors from "cors";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import { hash } from "bcryptjs";
+import crypto from "crypto";
 
 const cors = initMiddleware(
   Cors({
@@ -49,15 +50,23 @@ async function handler(req, res) {
         return;
       }
 
+      const resetToken = crypto.randomBytes(20).toString("hex"); // Generate a reset token
+      const resetTokenExpires = new Date(Date.now() + 3600000); // Token expires in 1 hour
+
+      
       const hashedPassword = await hash(password, 12);
+
 
       const user = await User.create({
         name,
         email,
         password: hashedPassword,
+        resetToken, // Store the reset token in the user document
+        resetTokenExpires, 
       });
 
       const token = generateToken(user._id);
+
 
       if (user) {
         const {_id, name, email, role} = user;

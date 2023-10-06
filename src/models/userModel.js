@@ -25,13 +25,19 @@ if (!mongoose.models.User) {
       role: {
         type: String,
         required: [true],
-        default: "admin",
+        default: "customer",
         enum: ["customer", "admin"],
       },
       phone: {
         type: String,
         required: [true],
         default: "+234",
+      },
+      resetToken: {
+        type: String,
+      },
+      resetTokenExpires:{
+        type: String,
       },
       address: {
         type: Object,

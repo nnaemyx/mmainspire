@@ -39,14 +39,6 @@ async function handler(req, res) {
         throw new Error("User does not exist");
       }
       const passwordIsCorrect = await compare(password, user.password);
-
-      const isAdmin = user.role
-      if (isAdmin && passwordIsCorrect) {
-        res.status(200).json({isAdmin: isAdmin})
-      } else {
-        res.status(400);
-        throw new Error("You are not an Admin");
-      }
       
       const token = generateToken(user._id);
 

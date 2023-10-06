@@ -1,13 +1,64 @@
+import { saveUserToLocalStorage } from "@/utils/Localstorage";
 import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [focusedInput, setFocusedInput] = useState(null);
+    const [errors, setErrors] = useState({});
+    const router = useRouter();
+
+    const validateForm = () => {
+        const newErrors = {};
+    
+        if (!email) {
+          newErrors.email = "E-mail is required";
+        }
+        if (!password) {
+          newErrors.password = "Password is required";
+        }
+    
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+      };
   
+
+      const onFormSubmit = async (e) => {
+        e.preventDefault();
+        if (validateForm()) {
+          try {
+            const response = await fetch("/api/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
+      
+            if (response.ok) {
+              const data = await response.json();
+              saveUserToLocalStorage(data);
+            
+              if(data.role === 'admin') {
+                // Redirect to admin page if user is an admin
+                toast.success("Logged in as admin");
+                router.push("/admin");
+              }
+              toast.success("Login successful");
+              router.push("/");
+            
+            } else {
+              toast.error("User doesn't exist")
+            }
+          } catch (error) {
+            alert(error.message);
+          }
+        }
+      }
     const handleInputClick = (inputName) => {
       setFocusedInput(inputName);
     };
@@ -21,17 +72,18 @@ const Login = () => {
 
       <div className="mx-auto text-center px-8 md:px-0">
         <div>
-          <h1 className="font-futura text-[30px] md:text-[48px] text-light mt-[140px] ">
+          <h1 className="font-futura text-[30px] md:text-[48px] font-semibold text-light mt-[140px] ">
             LOGIN
           </h1>
           <p className="mt-[14px] text-[14px] text-[#2E2E2E] font-opensans md:text-[15px]">
             Please enter your e-mail and password:
           </p>
         </div>
-        <form className="font-opensans mt-[44px]">
+        <form onSubmit={onFormSubmit} className="font-opensans mx-auto md:max-w-[478px] w-auto mt-[44px]">
           <div className="mt-4 relative">
             <input
               type="email"
+              value={email}
               placeholder=" "
               className={`focus:outline-none w-[100%] border border-solid px-[18px] py-[18px] ${
                 focusedInput === "email"
@@ -52,9 +104,11 @@ const Login = () => {
               Email
             </label>
           </div>
+          {errors.email && <p className="text-red-500">{errors.email}</p>}
           <div className="mt-4 relative">
             <input
               type="password"
+              value={password}
               placeholder=" "
               className={`focus:outline-none w-[100%] border border-solid px-[18px] py-[18px] ${
                 focusedInput === "password"
@@ -74,8 +128,11 @@ const Login = () => {
             >
               Password
             </label>
+            <Link className="underline absolute right-0 top-4 px-4 text-primary text-[14px] md:text-[15px] font-opensans" href="/authentication/ForgotPassword" >Forgot Password?</Link>
           </div>
+          {errors.password && <p className="text-red-500">{errors.password}</p>}
           <button
+          type="submit"
             className="mt-[24px]  text-[12px] md:text-[14px] font-semibold bg-dark text-white px-[0px] tracking-[1.5px] py-[18px] w-full"
           >
             LOGIN
