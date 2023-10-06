@@ -76,6 +76,7 @@ async function handler(req, res) {
         throw new Error("Invalid user");
       }
 
+      await user.save();
      
     } catch (error) {
       console.error("Error creating user:", error);

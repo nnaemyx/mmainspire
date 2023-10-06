@@ -25,15 +25,13 @@ if (!mongoose.models.User) {
       role: {
         type: String,
         required: [true],
-        default: "customer",
+        default: "admin",
         enum: ["customer", "admin"],
       },
       phone: {
         type: String,
-        required: [true, "Please enter a phone number"],
+        required: [true],
         default: "+234",
-        unique: true,
-        trim: true,
       },
       address: {
         type: Object,
