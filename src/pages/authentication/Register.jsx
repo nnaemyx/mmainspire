@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// import emailjs from "@emailjs/browser";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -68,6 +69,21 @@ const Register = () => {
         toast.error("An error occurred during registration");
       }
     }
+    // emailjs
+    // .sendForm(
+    //   "service_06cbrca",
+    //   "template_btlzstm",
+    //   form.current,
+    //   "xeG7hE7PKWwAYN6FS"
+    // )
+    // .then(
+    //   (result) => {
+    //     console.log(result.text);
+    //   },
+    //   (error) => {
+    //     console.log(error.text);
+    //   }
+    // );
   };
 
   const handleInputClick = (inputName) => {

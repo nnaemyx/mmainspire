@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 if (!mongoose.models.User) {
-    const userSchema = new Schema({
+  const userSchema = new Schema(
+    {
       name: {
         type: String,
         required: [true, "Please enter a name"],
@@ -36,16 +37,23 @@ if (!mongoose.models.User) {
       resetToken: {
         type: String,
       },
-      resetTokenExpires:{
+      resetTokenExpires: {
         type: String,
       },
+      cart: {
+        type: Array,
+        default: [],
+      },
       address: {
-        type: Object,
-        // address,, state, country
-      }
-    });
-    mongoose.model('User', userSchema);
+        type: String,
+      },
+      wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    },
+    {
+      timestamps: true,
+    }
+  );
+  mongoose.model("User", userSchema);
 }
 
-
-module.exports = mongoose.model('User');
+module.exports = mongoose.model("User");

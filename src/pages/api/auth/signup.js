@@ -27,9 +27,9 @@ async function handler(req, res) {
   // ...
 
   if (req.method === "POST") {
-    const { name, email, password } = req.body;
+    const { name, email, password,phone } = req.body;
 
-    if (!email || !email.includes("@") || !password || !name) {
+    if (!email || !email.includes("@") || !password || !name || !phone) {
       res.status(422).json({ message: "Invalid Data" });
       return;
     }
@@ -61,6 +61,7 @@ async function handler(req, res) {
         name,
         email,
         password: hashedPassword,
+        phone,
         resetToken, // Store the reset token in the user document
         resetTokenExpires, 
       });

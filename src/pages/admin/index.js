@@ -1,8 +1,13 @@
+
+import ProductUploadForm from '@/components/ProductForm'
 import React from 'react'
 
 const index = () => {
   return (
-    <div>index</div>
+    <div>
+    
+     <ProductUploadForm/>
+    </div>
   )
 }
 
