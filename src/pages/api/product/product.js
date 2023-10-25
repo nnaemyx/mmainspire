@@ -30,7 +30,8 @@ async function handler(req, res) {
       const newProduct = await Product.create(req.body);
       res.json(newProduct);
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
+      res.status(500).json({ error: "Error uploading product" });
     }
   } else if (req.method === "GET") {
     if (req.query.id) {

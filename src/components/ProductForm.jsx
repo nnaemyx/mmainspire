@@ -1,41 +1,45 @@
-// components/ProductUploadForm.js
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 const ProductUploadForm = () => {
-  const [prodName, setProdName] = useState('');
+  const [title, setTitle] = useState('');
+  const [slug, setSlug] = useState('');
   const [description, setDescription] = useState('');
-  const [images, setImages] = useState([]);
+  const [price, setPrice] = useState('');
+  const [category, setCategory] = useState('');
+  const [quantity, setQuantity] = useState('');
 
-  const handleImageChange = (e) => {
-    const selectedImages = Array.from(e.target.files);
-    setImages(selectedImages);
-  };
+  const router = useRouter();
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    // Create a FormData object to send to the API
-    const formData = new FormData();
-    formData.append('prodName', prodName);
-    formData.append('description', description);
-
-    images.forEach((image) => {
-      formData.append('images', image);
-    });
+    const productData = {
+      title,
+      slug,
+      description,
+      price,
+      category,
+      quantity,
+    };
 
     try {
-      // Send a POST request to your API route
-      const response = await fetch('/api/product/upload', {
+      // Send a POST request to your API route with JSON data
+      const res = await fetch('/api/product/product', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
       });
 
-      if (response.status === 201) {
-        // Product uploaded successfully, handle the response as needed
+      if (res.ok) {
+        // Product uploaded successfully, navigate to the image upload page
         console.log('Product uploaded successfully');
+        router.push('/admin/imageupload');
       } else {
         // Handle errors
-        console.error('Error uploading product:', response.statusText);
+        console.error('Error uploading product:', res.statusText);
       }
     } catch (error) {
       console.error('Error uploading product:', error);
@@ -44,15 +48,25 @@ const ProductUploadForm = () => {
 
   return (
     <div>
-      <h1>Upload a Product</h1>
+      <h2>Upload Product Description</h2>
       <form onSubmit={handleFormSubmit}>
         <div>
           <input
             type="text"
-            placeholder="Product Name"
-            name="prodName"
-            value={prodName}
-            onChange={(e) => setProdName(e.target.value)}
+            placeholder="Title"
+            name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="Slug"
+            name="slug"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
             required
           />
         </div>
@@ -60,20 +74,42 @@ const ProductUploadForm = () => {
           <textarea
             placeholder="Product Description"
             value={description}
+            name="description"
             onChange={(e) => setDescription(e.target.value)}
             required
           />
         </div>
         <div>
           <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageChange}
+            type="number"
+            placeholder="Price"
+            name="price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
             required
           />
         </div>
-        <button type="submit">Upload Product</button>
+        <div>
+          <input
+            type="text"
+            placeholder="Category"
+            name="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="number"
+            placeholder="Quantity"
+            name="quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Upload Product and Proceed</button>
       </form>
     </div>
   );

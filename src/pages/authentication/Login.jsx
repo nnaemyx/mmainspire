@@ -5,63 +5,64 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import "react-toastify/dist/ReactToastify.css";
-
+import Spinner from "@/components/Spinner";
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [focusedInput, setFocusedInput] = useState(null);
-    const [errors, setErrors] = useState({});
-    const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [focusedInput, setFocusedInput] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-    const validateForm = () => {
-        const newErrors = {};
-    
-        if (!email) {
-          newErrors.email = "E-mail is required";
-        }
-        if (!password) {
-          newErrors.password = "Password is required";
-        }
-    
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-      };
-  
+  const validateForm = () => {
+    const newErrors = {};
 
-      const onFormSubmit = async (e) => {
-        e.preventDefault();
-        if (validateForm()) {
-          try {
-            const response = await fetch("/api/auth/login", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email, password }),
-            });
-      
-            if (response.ok) {
-              const data = await response.json();
-              saveUserToLocalStorage(data);
-            
-              if(data.role === 'admin') {
-                // Redirect to admin page if user is an admin
-                toast.success("Logged in as admin");
-                router.push("/admin");
-              }
-              toast.success("Login successful");
-              router.push("/");
-            
-            } else {
-              toast.error("User doesn't exist")
-            }
-          } catch (error) {
-            alert(error.message);
+    if (!email) {
+      newErrors.email = "E-mail is required";
+    }
+    if (!password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          saveUserToLocalStorage(data);
+
+          if (data.role === "admin") {
+            // Redirect to admin page if user is an admin
+            toast.success("Logged in as admin");
+            router.push("/admin");
           }
+          toast.success("Login successful");
+          router.push("/");
+        } else {
+          toast.error("User doesn't exist");
         }
+      } catch (error) {
+        alert(error.message);
       }
-    const handleInputClick = (inputName) => {
-      setFocusedInput(inputName);
-    };
+    }
+    setIsLoading(false);
+  };
+  const handleInputClick = (inputName) => {
+    setFocusedInput(inputName);
+  };
   return (
     <div>
       <Head>
@@ -79,7 +80,10 @@ const Login = () => {
             Please enter your e-mail and password:
           </p>
         </div>
-        <form onSubmit={onFormSubmit} className="font-opensans mx-auto md:max-w-[478px] w-auto mt-[44px]">
+        <form
+          onSubmit={onFormSubmit}
+          className="font-opensans mx-auto md:max-w-[478px] w-auto mt-[44px]"
+        >
           <div className="mt-4 relative">
             <input
               type="email"
@@ -128,22 +132,33 @@ const Login = () => {
             >
               Password
             </label>
-            <Link className="underline absolute right-0 top-4 px-4 text-primary text-[14px] md:text-[15px] font-opensans" href="/authentication/ForgotPassword" >Forgot Password?</Link>
+            <Link
+              className="underline absolute right-0 top-4 px-4 text-primary text-[14px] md:text-[15px] font-opensans"
+              href="/authentication/ForgotPassword"
+            >
+              Forgot Password?
+            </Link>
           </div>
           {errors.password && <p className="text-red-500">{errors.password}</p>}
           <button
-          type="submit"
+            type="submit"
             className="mt-[24px]  text-[12px] md:text-[14px] font-semibold bg-dark text-white px-[0px] tracking-[1.5px] py-[18px] w-full"
           >
-            LOGIN
+            {isLoading ? <Spinner /> : "LOGIN"}
           </button>
         </form>
         <p className="mt-[14px] text-[14px]  text-[#2E2E2E] font-opensans md:text-[15px]">
-          New customer? <Link className="underline text-primary" href="/authentication/Register">Create an account</Link>
+          New customer?{" "}
+          <Link
+            className="underline text-primary"
+            href="/authentication/Register"
+          >
+            Create an account
+          </Link>
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

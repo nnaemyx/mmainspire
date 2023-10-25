@@ -30,7 +30,6 @@ if (!mongoose.models.Product) {
       },
       brand: {
         type: String,
-        required: true,
       },
       quantity: {
         type: Number,
