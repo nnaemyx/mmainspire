@@ -42,11 +42,13 @@ async function handler(req, res) {
         const findProduct = await Product.findById(id);
         res.json(findProduct);
       } catch (error) {
-        throw new Error(error);
+        console.error(error);
+        res.status(500).json({ error: "Error uploading product" });
       }
     } else {
       // Handle getting all products
       try {
+        await connectDB()
         // Filtering
         const queryObj = { ...req.query };
         const excludeFields = ["page", "sort", "limit", "fields"];
@@ -91,7 +93,8 @@ async function handler(req, res) {
         const product = await query;
         res.json(product);
       } catch (error) {
-        throw new Error(error);
+        console.error(error);
+        res.status(500).json({ error: "Error uploading product" });
       }
     }
   } else if (req.method === "PUT") {

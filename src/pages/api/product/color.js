@@ -45,7 +45,8 @@ async function handler(req, res) {
         const getallColor = await Color.find();
         res.json(getallColor);
       } catch (error) {
-        throw new Error(error);
+        console.error(error);
+      res.status(500).json({ error: "Error uploading product" });
       }
     }
   } else if (req.method === "PUT") {

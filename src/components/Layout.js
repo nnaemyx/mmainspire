@@ -52,7 +52,7 @@ export default function Layout({ children }) {
     <div className="min-h-screen bg-secondary flex flex-col">
       <Header session={[isAdmin]} />
 
-      <div className="flex flex-col md:flex-row flex-1">
+      <div className="flex flex-col gap-12 md:flex-row flex-1">
         <aside className="w-[232px] hidden lg:block  text-center mx-auto text-secondary bg-dark 2xl:w-[263px]">
           <nav className="text-center">
             <ul className=" leading-[4rem]">
@@ -123,7 +123,7 @@ export default function Layout({ children }) {
             </ul>
           </nav>
         </aside>
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 px-6">{children}</main>
       </div>
     </div>
   );

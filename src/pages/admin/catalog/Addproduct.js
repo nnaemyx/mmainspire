@@ -12,10 +12,9 @@ const Addproduct = () => {
       </Head>
 
       <div>
-      <h1>Product Upload - Step 1</h1>
-      <ProductUploadForm/>
-    </div>
-
+        <h1 className="text-center text-[18px] font-futura mt-12 font-semibold">Product Upload - Step 1</h1>
+        <ProductUploadForm />
+      </div>
     </div>
   );
 };

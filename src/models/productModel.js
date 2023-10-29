@@ -31,6 +31,9 @@ if (!mongoose.models.Product) {
       brand: {
         type: String,
       },
+      material: {
+        type: String,
+      },
       quantity: {
         type: Number,
         required: true,
@@ -42,7 +45,24 @@ if (!mongoose.models.Product) {
       images: {
         type: [String],
       },
-      color: [],
+      color: [
+        {
+          hex: {
+            type: String,
+            required: true,
+          },
+          title: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
+      sizes: {
+        S: { type: Number, default: 0 },
+        M: { type: Number, default: 0 },
+        L: { type: Number, default: 0 },
+        XL: { type: Number, default: 0 },
+      },
       tags: String,
       ratings: [
         {

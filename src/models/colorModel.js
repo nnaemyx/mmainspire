@@ -11,6 +11,10 @@ if (!mongoose.models.Color) {
         unique: true,
         index: true,
       },
+      hex: {
+        type: String, // You can use a string to store the hex color value
+        required: true,
+      },
     },
     {
       timestamps: true,

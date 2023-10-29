@@ -35,7 +35,7 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "mmainspire", // Optional: You can specify a folder in Cloudinary.
-    format: async (req, file) => "png", // Example: Set the format to PNG.
+    format: async (req, file) => "jpg", // Example: Set the format to PNG.
   },
 });
 
