@@ -53,9 +53,9 @@ const Navbar = () => {
       className={`${
         // if bg is true
         bg
-          ? "bg-black top-0 py-4 lg:py-6"
+          ? "bg-black top-0 py-4  z-10 lg:py-6"
           : // if bg is false
-            "bg-none"
+            "bg-none z-10"
       }
   fixed left-0 py-8 z-10 bg-dark text-secondary w-full transition-all  duration-200`}
     >

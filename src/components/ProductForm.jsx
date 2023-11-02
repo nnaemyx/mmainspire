@@ -18,7 +18,7 @@ const ProductUploadForm = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [sizeQuantities, setSizeQuantities] = useState({});
-  const [tags, setTags] = useState(""); // Initialize the "tags" state
+  const [tags, setTags] = useState(""); 
 
 
   const handleTagsChange = (e) => {

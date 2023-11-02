@@ -3,7 +3,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <div className="w-full relative text-dark">
+    <div className="w-full relative ">
       <div className="flex bg-cover ">
         <div>
           <Image

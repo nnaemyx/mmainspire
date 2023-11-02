@@ -126,7 +126,8 @@ async function handler(req, res) {
       }
       res.json({ message: "Product deleted successfully" });
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
+      res.status(500).json({ error: "Error deleting product" });
     }
   }
 }
