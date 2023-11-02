@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
+import Homelayout from "@/components/Homelayout";
 
 export default function App({
   Component,
@@ -21,10 +22,9 @@ export default function App({
     );
   }
   return (
-    <>
+    <Homelayout>
       <Component {...pageProps} />
-
       <ToastContainer />
-    </>
+    </Homelayout>
   );
 }

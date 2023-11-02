@@ -249,3 +249,70 @@ export const HomeIcon = ({ className }) => (
     />
   </svg>
 );
+
+export const CartIcon = ({ className }) => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 18"
+    className={`${className}`}
+  >
+    <path
+      d="M3 1h14l1 16H2L3 1z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.3"
+    ></path>
+    <path
+      d="M7 4v0a3 3 0 003 3v0a3 3 0 003-3v0"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.3"
+    ></path>
+  </svg>
+);
+
+export const HamburgerIcon = ({ className }) => (
+  <svg
+    focusable="false"
+    width="24"
+    height="24"
+    class="icon icon--header-hamburger   "
+    viewBox="0 0 18 14"
+    className={`${className}`}
+  >
+    <path
+      d="M0 1h18M0 13h18H0zm0-6h18H0z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.3"
+    ></path>
+  </svg>
+);
+
+export const MessageIcon = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="20"
+    height="20"
+    className={`${className}`}
+  >
+    <path d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM20 7.23792L12.0718 14.338L4 7.21594V19H20V7.23792ZM4.51146 5L12.0619 11.662L19.501 5H4.51146Z"></path>
+  </svg>
+);
+
+export const SearchIcon = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="20"
+    height="20"
+    className={`${className}`}
+  >
+    <path
+      d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"
+      fill="rgba(255,255,255,1)"
+    ></path>
+  </svg>
+);
