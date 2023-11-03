@@ -30,63 +30,70 @@ const ProgressBar = () => {
   }, []);
 
   return (
-    <div className="flex items-center px-[6rem] justify-between gap-[100px] mt-36 w-full">
-      <div className="w-[45%]">
+    <div className="flex items-center lg:flex-row flex-col lg:px-[6rem] justify-center lg:justify-between gap-[100px] mt-36 w-full">
+      <div className="lg:w-[45%] w-[85%]">
         {showImage1 ? (
           <Image
-            width={429.49}
+            width={729.49}
             height={894.39}
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698366562/mmainspire/li27hh3fja61jrwqoop4.jpg"
             alt="Image 1"
-            className="w-full"
+            
           />
         ) : null}
         {!showImage1 ? (
           <Image
-            width={429.49}
-            height={794.39}
+            width={729.49}
+            height={894.39}
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698366418/mmainspire/jjll77wycm8dw7w3furg.jpg"
             alt="Image 2"
-            className="w-full"
+            
           />
         ) : null}
       </div>
       <div className="mx-auto text-center">
         <div>
-            <div className="leading-[3.5rem]">
-                <h2 className="font-opensans font-semibold text-[13px]">SHOP</h2>
-                <h3 className="font-futura text-[46px] mt-2 font-semibold">ZINI SILK MAXI</h3>
-                <h3 className="font-futura tracking-[.1rem] font-semibold text-[15px]">POLYSILK TIERED MAXI DRESS WITH STRAPS</h3>
-
-            </div>
-            <button className="tracking-[.2rem] z-10 text-[15px]  h-[64px] px-[3rem] mt-4 font-opensans font-semibold bg-dark  text-secondary">SHOP NOW</button>
+          <div className="md:leading-[3.5rem] leading-[2.5rem]">
+            <h2 className="font-opensans font-semibold text-[12px] md:text-[13px]">SHOP</h2>
+            <h3 className="font-futura md:text-[46px] text-[26px] mt-2 font-semibold">
+              ZINI SILK MAXI
+            </h3>
+            <h3 className="font-futura tracking-[.1rem] font-semibold text-[14px] md:text-[15px]">
+              POLYSILK TIERED MAXI DRESS WITH STRAPS
+            </h3>
+          </div>
+          <button className="tracking-[.2rem] z-10 text-[12px] md:text-[15px] h-[44px] px-[2rem]  md:h-[64px] md:px-[3rem] mt-4 font-opensans font-semibold bg-dark  text-secondary">
+            SHOP NOW
+          </button>
         </div>
         <div className="flex gap-8 mt-24 items-center">
-            <div>
-                <div className="w-[10rem] relative h-1 bg-gray-300 rounded-full">
-                <motion.div
-                    className="absolute h-1 bg-green-500 rounded-full"
-                    initial="initial"
-                    animate={controls1}
-                    variants={progressBarVariants}
-                ></motion.div>
-                </div>
-                <h2 className="font-futura mt-4 font-semibold text-[15px]">ZINI SLIKI MAXI</h2>
+          <div>
+            <div className="w-[10rem] relative h-1 bg-gray-300 rounded-full">
+              <motion.div
+                className="absolute h-1 bg-green-500 rounded-full"
+                initial="initial"
+                animate={controls1}
+                variants={progressBarVariants}
+              ></motion.div>
             </div>
-            <div>
-                <div className="w-[10rem] relative h-1 bg-gray-300 rounded-full">
-                <motion.div
-                    className="absolute h-1 bg-green-500 rounded-full"
-                    initial="initial"
-                    animate={controls2}
-                    variants={progressBarVariants}
-                ></motion.div>
-                </div>
-                <h2 className="font-futura mt-4 font-semibold text-[15px]">ZINI SLIKI MAXI</h2>
-
+            <h2 className="font-futura mt-4 font-semibold text-[15px]">
+              ZINI SLIKI MAXI
+            </h2>
+          </div>
+          <div>
+            <div className="w-[10rem] relative h-1 bg-gray-300 rounded-full">
+              <motion.div
+                className="absolute h-1 bg-green-500 rounded-full"
+                initial="initial"
+                animate={controls2}
+                variants={progressBarVariants}
+              ></motion.div>
             </div>
+            <h2 className="font-futura mt-4 font-semibold text-[15px]">
+              ZINI SLIKI MAXI
+            </h2>
+          </div>
         </div>
-
       </div>
     </div>
   );

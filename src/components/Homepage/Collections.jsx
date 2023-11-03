@@ -44,8 +44,8 @@ const Collections = () => {
   return (
     <div className="mt-36 pl-8">
       <div className="text-center">
-        <h2 className="font-opensans font-semibold text-[15px]">SHOP OUR</h2>
-        <h3 className="font-futura text-[64px] mt-2 font-semibold">
+        <h2 className="font-opensans font-semibold text-[12px] md:text-[15px]">SHOP OUR</h2>
+        <h3 className="font-futura md:text-[64px] text-[30px] mt-2 font-semibold">
           COLLECTION
         </h3>
       </div>

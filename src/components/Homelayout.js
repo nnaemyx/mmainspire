@@ -11,12 +11,12 @@ const Homelayout = ({children}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <h1 className="text-center mx-auto text-dark font-opensans bg-secondary py-5">
+        <h1 className="text-center mx-auto text-[12px] md:text-[16px] text-dark font-opensans bg-secondary py-3 md:py-5">
           WORLDWIDE SHIPPING AVAILABLE
         </h1>
       </div>
       <Navbar/>
-      <main className="mt-[10rem]">{children}</main>
+      <main className="lg:mt-[9rem]">{children}</main>
     </div>
   );
 };
