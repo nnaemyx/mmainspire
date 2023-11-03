@@ -30,7 +30,7 @@ const ProgressBar = () => {
   }, []);
 
   return (
-    <div className="flex items-center lg:flex-row flex-col lg:px-[6rem] justify-center lg:justify-between gap-[100px] mt-36 w-full">
+    <div className="flex items-center lg:flex-row flex-col lg:px-[6rem] justify-center lg:justify-between lg:gap-[100px] gap-4 lg:mt-36 mt-24 w-full">
       <div className="lg:w-[45%] w-[85%]">
         {showImage1 ? (
           <Image
@@ -66,7 +66,7 @@ const ProgressBar = () => {
             SHOP NOW
           </button>
         </div>
-        <div className="flex gap-8 mt-24 items-center">
+        <div className="flex gap-8 lg:mt-24 mt-12 items-center">
           <div>
             <div className="w-[10rem] relative h-1 bg-gray-300 rounded-full">
               <motion.div
