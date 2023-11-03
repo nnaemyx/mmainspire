@@ -1,4 +1,4 @@
-import Enquiry from "@/models/enquiryModel";
+import Enquiry from "@/models/enqModel";
 import { connectDB } from "@/libs/ConnectDB";
 import initMiddleware from "@/utils/init-Middleware";
 import Cors from "cors";
