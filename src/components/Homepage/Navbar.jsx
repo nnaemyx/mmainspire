@@ -260,9 +260,9 @@ const Navbar = () => {
             animate="animate"
             variants={menuVariants}
           >
-            <div className="flex flex-col justify-between items-start py-[2rem] leading-[3rem] bg-white h-full w-[120%] ">
+            <div className="flex flex-col justify-between items-start leading-[3rem] bg-white h-full w-[120%] ">
               <div className="w-full">
-                <button onClick={closeLeft} className="px-6 py-2 text-dark">
+                <button onClick={closeLeft} className="px-6 py-2 mt-[4rem] text-dark">
                   <motion.svg
                     variants={closeVariants}
                     initial="initial"
