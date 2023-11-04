@@ -20,7 +20,7 @@ const Newsletter = () => {
           />
         </div>
     
-        <div className="bg-white md:w-[580px] w-[310px] 425:w-[360px] font-opensans md:px-8 px-6 h-[260px] md:h-[372px] absolute md:left-24 md:top-16 top-8 left-4 425:left-8 text-center">
+        <div className="bg-white md:w-[580px] w-[310px] 425:w-[360px] font-opensans md:px-8 px-6 h-[260px] md:h-[372px] absolute md:left-24 md:top-16 top-8 left-5 425:left-8 text-center">
           <h2 className="md:mt-20 mt-6 md:text-[18px] uppercase font-semibold text-[12px]">Join us</h2>
           <h3 className="md:text-[20px] text-[12px] mt-[24px] mb-[15px]">Promotions, new products and sales. Directly to your inbox.</h3>
           <form>
