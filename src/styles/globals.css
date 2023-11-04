@@ -66,10 +66,14 @@
   
   @media (max-width: 768px) {
     .productSlider .swiper-button-prev,
-    .productSlider .swiper-button-next,
-    .productSlider .swiper-pagination,
-    .testimonialSlider .swiper-button-prev,
-    .testimonialSlider .swiper-button-next {
+    .productSlider .swiper-button-next {
+      display: none;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .productSlider .swiper-button-prev,
+    .productSlider .swiper-button-next {
       display: none;
     }
   }
