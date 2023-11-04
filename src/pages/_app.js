@@ -23,8 +23,8 @@ export default function App({
     );
   }
   return (
-    <CustomContextProvider>
-      <Homelayout>
+    <CustomContextProvider session={session}>
+      <Homelayout >
         <Component {...pageProps} />
         <ToastContainer />
       </Homelayout>

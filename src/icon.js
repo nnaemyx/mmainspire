@@ -261,13 +261,13 @@ export const CartIcon = ({ className }) => (
       d="M3 1h14l1 16H2L3 1z"
       fill="none"
       stroke="currentColor"
-      stroke-width="1.3"
+      strokeWidth="1.3"
     ></path>
     <path
       d="M7 4v0a3 3 0 003 3v0a3 3 0 003-3v0"
       fill="none"
       stroke="currentColor"
-      stroke-width="1.3"
+      strokeWidth="1.3"
     ></path>
   </svg>
 );
@@ -277,7 +277,6 @@ export const HamburgerIcon = ({ className }) => (
     focusable="false"
     width="24"
     height="24"
-    class="icon icon--header-hamburger   "
     viewBox="0 0 18 14"
     className={`${className}`}
   >
@@ -285,7 +284,7 @@ export const HamburgerIcon = ({ className }) => (
       d="M0 1h18M0 13h18H0zm0-6h18H0z"
       fill="none"
       stroke="currentColor"
-      stroke-width="1.3"
+      strokeWidth="1.3"
     ></path>
   </svg>
 );

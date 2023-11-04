@@ -13,7 +13,6 @@ const SwiperCarousel = ({ data }) => {
       modules={[Navigation, Mousewheel]}
       spaceBetween={50}
       slidesPerView={4}
-      forceToAxis={true}
       onSwiper={(swiper) => console.log(swiper)}
       onSlideChange={() => console.log("slide change")}
       navigation={{ clickable: true }}

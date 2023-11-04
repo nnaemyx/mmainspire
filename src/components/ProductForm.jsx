@@ -172,10 +172,9 @@ const ProductUploadForm = () => {
             <option value="" disabled>
               Select Tag
             </option>
-            <option value="featured">Hero section</option>
-            <option value="popular">New Arrival</option>
+            <option value="new arrival">New Arrival</option>
             <option value="special">Special</option>
-            <option value="special">Collection</option>
+            <option value="collection">Collection</option>
           </select>
         </div>
 
