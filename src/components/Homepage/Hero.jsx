@@ -8,7 +8,7 @@ const Hero = () => {
         <div>
           <Image
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"
-            width={820}
+            width={920}
             height={1126}
             alt="hero-image1"
           />

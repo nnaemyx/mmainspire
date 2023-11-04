@@ -31,7 +31,7 @@ const ProgressBar = () => {
 
   return (
     <div className="flex items-center lg:flex-row flex-col lg:px-[6rem] justify-center lg:justify-between lg:gap-[100px] gap-4 lg:mt-36 mt-24 w-full">
-      <div className="lg:w-[45%] w-[85%]">
+      <div className="lg:w-[45%] w-[75%]">
         {showImage1 ? (
           <Image
             width={729.49}
