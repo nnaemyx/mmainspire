@@ -60,7 +60,7 @@ const SwiperCarousel = ({ data }) => {
             />
 
             <div className="absolute top-0 h-full lg:w-[356px] left-0 right-0 flex flex-col justify-center mx-auto text-center text-white bg-black/50">
-              <h3 className="text-[36px] font-futura font-semibold">
+              <h3 className="md:text-[36px] text-[20px] font-futura font-semibold">
                 {item.title}
               </h3>
             </div>

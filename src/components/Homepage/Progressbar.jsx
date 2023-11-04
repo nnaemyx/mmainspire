@@ -66,9 +66,9 @@ const ProgressBar = () => {
             SHOP NOW
           </button>
         </div>
-        <div className="flex gap-8 lg:mt-24 mt-12 items-center">
+        <div className="flex gap-8 lg:mt-24 mt-12 mx-auto justify-center items-center">
           <div>
-            <div className="w-[10rem] relative h-1 bg-gray-300 rounded-full">
+            <div className="md:w-[10rem] w-[6rem] relative h-1 bg-gray-300 rounded-full">
               <motion.div
                 className="absolute h-1 bg-green-500 rounded-full"
                 initial="initial"
@@ -76,12 +76,12 @@ const ProgressBar = () => {
                 variants={progressBarVariants}
               ></motion.div>
             </div>
-            <h2 className="font-futura mt-4 font-semibold text-[15px]">
+            <h2 className="font-futura mt-4 font-semibold text-[12px] md:text-[15px]">
               ZINI SLIKI MAXI
             </h2>
           </div>
           <div>
-            <div className="w-[10rem] relative h-1 bg-gray-300 rounded-full">
+            <div className="md:w-[10rem] w-[6rem] relative h-1 bg-gray-300 rounded-full">
               <motion.div
                 className="absolute h-1 bg-green-500 rounded-full"
                 initial="initial"
@@ -89,7 +89,7 @@ const ProgressBar = () => {
                 variants={progressBarVariants}
               ></motion.div>
             </div>
-            <h2 className="font-futura mt-4 font-semibold text-[15px]">
+            <h2 className="font-futura mt-4 font-semibold text-[12px] md:text-[15px]">
               ZINI SLIKI MAXI
             </h2>
           </div>
