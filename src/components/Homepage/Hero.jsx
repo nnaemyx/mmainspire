@@ -15,7 +15,7 @@ const Hero = () => {
           />
            <Image
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"
-            width={960}
+            width={980}
             height={1126}
             alt="hero-image1"
             className="lg:hidden block"
