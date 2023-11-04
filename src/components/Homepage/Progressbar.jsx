@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 const ProgressBar = () => {
   const progressBarVariants = {
     initial: { width: 0 },
-    animate: { width: "100%", transition: { duration: 8 } },
+    animate: { width: "100%", transition: { duration: 8} },
+  };
+  const imageVariants = {
+    initial: { x: "100%" },
+    animate: { x: 0, transition: { duration: 4, ease: "linear" } },
   };
 
   const controls1 = useAnimation();
@@ -31,25 +35,23 @@ const ProgressBar = () => {
 
   return (
     <div className="flex items-center lg:flex-row flex-col lg:px-[6rem] justify-center lg:justify-between lg:gap-[100px] gap-4 lg:mt-36 mt-24 w-full">
-      <div className="lg:w-[45%] w-[75%]">
-        {showImage1 ? (
-          <Image
-            width={729.49}
-            height={894.39}
-            src="https://res.cloudinary.com/mmainspire/image/upload/v1698366562/mmainspire/li27hh3fja61jrwqoop4.jpg"
-            alt="Image 1"
-            
-          />
-        ) : null}
-        {!showImage1 ? (
-          <Image
-            width={729.49}
-            height={894.39}
-            src="https://res.cloudinary.com/mmainspire/image/upload/v1698366418/mmainspire/jjll77wycm8dw7w3furg.jpg"
-            alt="Image 2"
-            
-          />
-        ) : null}
+         <div className="lg:w-[45%] w-[75%] relative">
+        <div className="w-full h-full ">
+          <motion.div
+            className="w-full h-full"
+            initial={showImage1 ? { x: "0%" } : { x: "0%" }}
+            animate={showImage1 ? { x: "0%" } : { x: "0%" }}
+            variants={imageVariants}
+          >
+            <Image
+              width={729.49}
+              height={894.39}
+              src={showImage1 ? "https://res.cloudinary.com/mmainspire/image/upload/v1698366562/mmainspire/li27hh3fja61jrwqoop4.jpg" : "https://res.cloudinary.com/mmainspire/image/upload/v1698366418/mmainspire/jjll77wycm8dw7w3furg.jpg"}
+              alt={showImage1 ? "Image 1" : "Image 2"}
+              className="w-full h-full"
+            />
+          </motion.div>
+        </div>
       </div>
       <div className="mx-auto text-center">
         <div>
