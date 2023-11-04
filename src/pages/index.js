@@ -1,6 +1,7 @@
 import Collections from "@/components/Homepage/Collections";
 import Hero from "@/components/Homepage/Hero";
 import Newarrivals from "@/components/Homepage/Newarrivals";
+import Newsletter from "@/components/Homepage/Newsletter";
 import ProgressBar from "@/components/Homepage/Progressbar";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
       <Newarrivals/>
       <ProgressBar/>
       <Collections/>
+      <Newsletter/>
     </div>
   );
 }

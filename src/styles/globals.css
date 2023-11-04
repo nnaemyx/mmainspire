@@ -77,3 +77,8 @@
       display: none;
     }
   }
+
+  .newsletter {
+    object-position: 50.5232% 11.75%;
+    position: absolute;
+  }

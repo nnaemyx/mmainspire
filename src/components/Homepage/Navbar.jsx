@@ -11,12 +11,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import { useAuth } from "@/utils/auth";
+import { getUserFromLocalStorage } from "@/utils/Localstorage";
 
 const Navbar = () => {
   const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("NGN"); // Default to Naira
   const [bg, setBg] = useState(false);
   const { isLeftOpen, openLeft, closeLeft } = useCustomContext();
+
+  const userData = getUserFromLocalStorage();
+  const { user } = useAuth();
 
   const menuVariants = {
     initial: { left: "-100%" },
@@ -31,7 +36,7 @@ const Navbar = () => {
   const closeVariants = {
     open: { opacity: 1, x: 0 },
     animate: { transition: { duration: 0.5 } },
-    closed: { opacity: 1 , transition: { duration: 0.5 }},
+    closed: { opacity: 1, transition: { duration: 0.5 } },
   };
 
   const exchangeRates = {
@@ -116,7 +121,7 @@ const Navbar = () => {
                 </span>
               </button>
               {isCurrencyDropdownOpen && (
-                <div className="origin-top-right md:text-[18px] text-[12px] absolute right-0 mt-2 w-20 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                <div className="origin-top-right md:text-[18px] text-[12px] absolute right-0 mt-2 w-14 text-center rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <div
                     className="py-1"
                     role="menu"
@@ -143,6 +148,7 @@ const Navbar = () => {
                 </div>
               )}
             </div>
+
             <Link href="/about">
               <CartIcon className="fill-white w-[20px] h-[20px]" />
             </Link>
@@ -220,9 +226,26 @@ const Navbar = () => {
           <Link href="/contact">
             <SearchIcon className="fill-white w-[30px] h-[30px]" />
           </Link>
-          <Link href="/contact">
-            <AccountIcon2 className="fill-white w-[30px] h-[29px]" />
-          </Link>
+          {user ? (
+            <Link href="/account">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+              >
+                <div className="hidden relative md:flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 absolute left-5 top-0 bg-primary border-2 border-solid border-secondary rounded-full animate-ping"></span>
+                  <AccountIcon2 className="fill-white w-[30px] h-[29px]" />
+                </div>
+              </motion.div>
+            </Link>
+          ) : (
+            <>
+              {/* AccountIcon2 for logged-out state */}
+              <Link href="/authentication/Register">
+                <AccountIcon2 className="fill-white w-[30px] h-[29px]" />
+              </Link>
+            </>
+          )}
           <Link href="/about">
             <CartIcon className="fill-white w-[32px] h-[30px]" />
           </Link>
@@ -237,37 +260,66 @@ const Navbar = () => {
             animate="animate"
             variants={menuVariants}
           >
-            <div className="flex flex-col items-start py-[5rem] leading-[3rem] bg-white h-full w-[120%] ">
-              <button onClick={closeLeft} className="px-6 py-2 text-dark">
-                <motion.svg
-                  variants={closeVariants}
+            <div className="flex flex-col justify-between items-start py-[2rem] leading-[3rem] bg-white h-full w-[120%] ">
+              <div className="w-full">
+                <button onClick={closeLeft} className="px-6 py-2 text-dark">
+                  <motion.svg
+                    variants={closeVariants}
+                    initial="initial"
+                    whileHover="hover"
+                    animate="closed"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="30"
+                    height="30"
+                  >
+                    <path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path>
+                  </motion.svg>
+                </button>
+                <motion.div
                   initial="initial"
-                  whileHover="hover"
-                  animate="closed"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="30"
-                  height="30"
+                  animate="animate"
+                  variants={menuItemVariants}
+                  className="font-futura flex flex-col divide-y w-full uppercase font-semibold text-dark px-6"
                 >
-                  <path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path>
-                </motion.svg>
-              </button>
-              <motion.div
-                initial="initial"
-                animate="animate"
-                variants={menuItemVariants}
-                className="font-futura flex flex-col divide-y w-full uppercase font-semibold text-dark px-6"
-              >
-                <Link href="/">
-                  <p className="py-2">Home</p>
-                </Link>
-                <Link href="/shop">
-                  <p className="py-2">Shop</p>
-                </Link>
-                <Link href="/contact">
-                  <p className="py-2">Contact</p>
-                </Link>
-              </motion.div>
+                  <Link href="/">
+                    <p className="py-2">Home</p>
+                  </Link>
+                  <Link href="/shop">
+                    <p className="py-2">Shop</p>
+                  </Link>
+                  <Link href="/contact">
+                    <p className="py-2">Contact</p>
+                  </Link>
+                </motion.div>
+              </div>
+              <div className="text-dark px-6 w-full divide-y">
+                <div className="flex gap-2 items-center">
+                  {user ? (
+                    <Link href="/account">
+                      <div className="flex items-center gap-2">
+                        <p className="text-[14px] font-opensans">
+                          Hello, {user.name}
+                        </p>
+                      </div>
+                    </Link>
+                  ) : (
+                    <>
+                      {/* AccountIcon2 for logged-out state */}
+                      <Link href="/authentication/Register">
+                        <div className="flex gap-2 items-center">
+                          <AccountIcon2 className="fill-dark w-[20px] h-[20px]" />
+                          <h2 className="text-[14px] font-opensans">Account</h2>
+                        </div>
+                      </Link>
+                    </>
+                  )}
+                </div>
+                <div className="flex gap-2 items-center">
+                  <MessageIcon className="fill-dark w-[20px] h-[20px]" />
+                  <h2 className="text-[14px] font-opensans">Inbox</h2>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
