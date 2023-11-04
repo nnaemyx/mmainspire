@@ -237,7 +237,7 @@ const Navbar = () => {
             animate="animate"
             variants={menuVariants}
           >
-            <div className="flex flex-col items-start py-8 leading-[3rem] bg-white h-full w-[120%] ">
+            <div className="flex flex-col items-start py-[5rem] leading-[3rem] bg-white h-full w-[120%] ">
               <button onClick={closeLeft} className="px-6 py-2 text-dark">
                 <motion.svg
                   variants={closeVariants}
