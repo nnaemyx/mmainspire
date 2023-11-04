@@ -8,9 +8,17 @@ const Hero = () => {
         <div>
           <Image
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"
-            width={920}
+            width={820}
             height={1126}
             alt="hero-image1"
+            className="hidden lg:flex"
+          />
+           <Image
+            src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"
+            width={960}
+            height={1126}
+            alt="hero-image1"
+            className="lg:hidden block"
           />
         </div>
         <div className="hidden lg:flex">
