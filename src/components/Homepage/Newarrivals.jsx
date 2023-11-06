@@ -77,13 +77,13 @@ const Newarrivals = () => {
               </span>
             </div>
             <div className="mt-4 text-center">
-              <h4 className="font-opensans text-[14px] md:text-[18px]">
+              <h4 className="font-opensans text-[12px] md:text-[15px]">
                 {product.title}
               </h4>
-              <p className="font-opensans text-[14px] md:text-[18px]">
+              <p className="font-opensans text-[12px] md:text-[15px]">
                 {selectedCurrency === "NGN"
                   ? `₦${product.price}`
-                  : `$${product.usdPrice}`}
+                  : `$${product.usdPrice.toFixed(2)}`}
               </p>
             </div>
           </div>

@@ -135,6 +135,9 @@ const Navbar = () => {
           <Link href="/contact">
             <p className="mx-2 text-[15px]">Contact</p>
           </Link>
+          <Link href="/admin">
+            <p className="mx-2 text-[15px]">Admin</p>
+          </Link>
         </div>
         <div className="lg:flex hidden flex-col mx-auto pl-12 items-center">
           <h1 className="text-[18px] font-futura font-semibold tracking-[.5rem]">
