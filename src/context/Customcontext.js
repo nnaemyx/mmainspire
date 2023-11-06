@@ -9,6 +9,25 @@ export const CustomContextProvider = ({ children }) => {
   const [isRightOpen, setIsRightOpen] = useState(false);
   const [isBottomOpen, setIsBottomOpen] = useState(false);
 
+  const initialCurrency = () => {
+    if (typeof window !== "undefined") {
+      const storedCurrency = localStorage.getItem("selectedcurrency");
+      return storedCurrency || "NGN";
+    }
+    return "NGN"
+  };
+
+  const [selectedCurrency, setSelectedCurrency] = useState(initialCurrency());
+
+  const handleCurrencyChange = (newCurrency) => {
+    setSelectedCurrency(newCurrency);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedcurrency", newCurrency);
+    }
+    // Store the new currency in local storage
+    
+  };
+
   const openLeft = () => setIsLeftOpen(true);
   const closeLeft = () => setIsLeftOpen(false);
 
@@ -30,6 +49,8 @@ export const CustomContextProvider = ({ children }) => {
         closeRight,
         openBottom,
         closeBottom,
+        selectedCurrency,
+        handleCurrencyChange,
       }}
     >
       {children}

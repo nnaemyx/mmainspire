@@ -45,7 +45,8 @@ async function handler(req, res) {
         const getallCategory = await Category.find();
         res.json(getallCategory);
       } catch (error) {
-        throw new Error(error);
+        console.error(error);
+        res.status(500).json({ error: "Error getting categories" });
       }
     }
   } else if (req.method === "PUT") {

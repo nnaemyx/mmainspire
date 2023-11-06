@@ -5,6 +5,7 @@ import useColorStore from "@/store/color/colorStore";
 import { saveProductsToLocalStorage } from "@/utils/Localstorage";
 import { toast } from "react-toastify";
 import useProductCategoryStore from "@/store/pcategory/pStore";
+import getExchangeRate from "@/utils/exchangeRates";
 
 const ProductUploadForm = () => {
   const [title, setTitle] = useState("");
@@ -19,6 +20,21 @@ const ProductUploadForm = () => {
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [sizeQuantities, setSizeQuantities] = useState({});
   const [tags, setTags] = useState(""); 
+  const [usdPrice, setUsdPrice] = useState("");
+
+
+  const handleNairaPriceChange  = async (e) => {
+    const nairaPrice = parseFloat(e.target.value); // Parse Naira input to a float
+    if (!isNaN(nairaPrice)) {
+      const exchangeRate = await getExchangeRate() // Replace with your actual exchange rate
+      const convertedUsdPrice = (nairaPrice / exchangeRate).toFixed(2); // Calculate USD price
+      setPrice(nairaPrice); // Update the Naira price in the state
+      setUsdPrice(convertedUsdPrice); // Update the USD price in the state
+    } else {
+      setPrice(""); // Clear the Naira price if it's not a valid number
+      setUsdPrice(""); // Clear the USD price
+    }
+  };
 
 
   const handleTagsChange = (e) => {
@@ -56,11 +72,17 @@ const ProductUploadForm = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    const exchangeRate = await getExchangeRate();
+
+    // Calculate the USD price
+    const usdPrice = parseFloat(price) / exchangeRate;
+
     const productData = {
       title,
       slug,
       description,
-      price,
+      price: parseFloat(price), // NGN price
+      usdPrice,
       category,
       quantity,
       material,
@@ -140,11 +162,16 @@ const ProductUploadForm = () => {
             placeholder="Price"
             name="price"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={handleNairaPriceChange}
             required
             className="w-[800px] px-4 py-4 focus:outline-none  border border-dark border-solid"
           />
         </div>
+        {usdPrice !== "" && (
+          <div className="mt-2 text-[14px] text-gray-600">
+            Price (USD): {usdPrice}
+          </div>
+        )}
         <div className="mt-6">
           <select
             name="category"

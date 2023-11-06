@@ -59,14 +59,27 @@ export const AccountIcon = ({ className }) => (
 );
 export const AccountIcon2 = ({ className }) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    width="20"
-    height="20"
+    focusable="false"
+    width="18"
+    height="17"
     className={`${className}`}
-    fill="#FFFFFF"
+    viewBox="0 0 18 17"
   >
-    <path d="M20 22H18V20C18 18.3431 16.6569 17 15 17H9C7.34315 17 6 18.3431 6 20V22H4V20C4 17.2386 6.23858 15 9 15H15C17.7614 15 20 17.2386 20 20V22ZM12 13C8.68629 13 6 10.3137 6 7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7C18 10.3137 15.3137 13 12 13ZM12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"></path>
+    <circle
+      cx="9"
+      cy="5"
+      r="4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinejoin="round"
+    ></circle>
+    <path
+      d="M1 17v0a4 4 0 014-4h8a4 4 0 014 4v0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+    ></path>
   </svg>
 );
 
@@ -251,12 +264,7 @@ export const HomeIcon = ({ className }) => (
 );
 
 export const CartIcon = ({ className }) => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 20 18"
-    className={`${className}`}
-  >
+  <svg width="20" height="20" viewBox="0 0 20 18" className={`${className}`}>
     <path
       d="M3 1h14l1 16H2L3 1z"
       fill="none"
@@ -291,27 +299,40 @@ export const HamburgerIcon = ({ className }) => (
 
 export const MessageIcon = ({ className }) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
+    focusable="false"
     width="20"
-    height="20"
+    height="16"
+    viewBox="0 0 20 16"
     className={`${className}`}
   >
-    <path d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM20 7.23792L12.0718 14.338L4 7.21594V19H20V7.23792ZM4.51146 5L12.0619 11.662L19.501 5H4.51146Z"></path>
+    <path
+      d="M19 4l-9 5-9-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+    ></path>
+    <path
+      stroke="currentColor"
+      fill="none"
+      strokeWidth="1.3"
+      d="M1 1h18v14H1z"
+    ></path>
   </svg>
 );
 
 export const SearchIcon = ({ className }) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    width="20"
-    height="20"
+    focusable="false"
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
     className={`${className}`}
   >
     <path
-      d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"
-      fill="rgba(255,255,255,1)"
+      d="M12.336 12.336c2.634-2.635 2.682-6.859.106-9.435-2.576-2.576-6.8-2.528-9.435.106C.373 5.642.325 9.866 2.901 12.442c2.576 2.576 6.8 2.528 9.435-.106zm0 0L17 17"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
     ></path>
   </svg>
 );

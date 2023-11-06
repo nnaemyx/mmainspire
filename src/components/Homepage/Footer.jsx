@@ -11,15 +11,15 @@ const Footer = () => {
       <div className="flex lg:flex-row flex-col lg:gap-[150px] font-opensans items-start border-t border-solid bg-dark text-white lg:h-[382.69px] px-8 py-16">
         <div className="flex w-full items-start justify-between">
           <div className="">
-            <h2 className="font-opensans text-primary font-semibold text-[12px] md:text-[15px]">
+            <h2 className="font-opensans text-primary font-semibold text-[12px] md:text-[13px]">
               MMA INSPIRE
             </h2>
-            <h3 className="text-[12px] w-[60%] md:w- md:text-[15px] mt-4">
+            <h3 className="text-[12px] md:w-auto w-[60%] md:w- md:text-[15px] mt-4">
               Premium multi-brand stores in Onitsha, Anambra State
             </h3>
           </div>
           <div className="">
-            <h2 className="font-opensans font-semibold text-primary text-[12px] md:text-[15px]">FOLLOW US</h2>
+            <h2 className="font-opensans font-semibold text-primary text-[12px] md:text-[13px]">FOLLOW US</h2>
             <div className="flex items-center mt-4">
               <span className="border overflow-hidden relative group lg:z-10 border-solid hover:border-primary border-secondary md:px-6 px-4 py-3 md:py-5">
                 <svg
@@ -60,7 +60,7 @@ const Footer = () => {
         </div>
         <div className=" flex md:flex-row flex-col w-full items-start justify-between">
           <div className="mt-6 lg:mt-0">
-            <h2 className="font-opensans font-semibold text-primary text-[12px] md:text-[15px]">Links</h2>
+            <h2 className="font-opensans font-semibold text-primary text-[12px] md:text-[13px]">Links</h2>
             <ul className="leading-[2.5rem] text-[12px] md:text-[15px] mt-4">
               <li className="hover:text-secondary/50">Search</li>
               <li className="hover:text-secondary/50">Size Chart</li>
@@ -70,7 +70,7 @@ const Footer = () => {
             </ul>
           </div>
           <div className="mt-6 lg:mt-0">
-            <h2 className="font-opensans font-semibold text-primary text-[12px] md:text-[15px]">JOIN US</h2>
+            <h2 className="font-opensans font-semibold text-primary text-[12px] md:text-[13px]">JOIN US</h2>
             <h3 className="mt-4 text-[12px] md:text-[15px] w-[80%]">
               Promotions, new products and sales. Directly to your inbox.
             </h3>

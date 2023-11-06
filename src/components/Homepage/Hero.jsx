@@ -4,7 +4,7 @@ import React from "react";
 const Hero = () => {
   return (
     <div className="w-full relative ">
-      <div className="flex bg-cover ">
+      <div className="flex  ">
         <div>
           <Image
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"

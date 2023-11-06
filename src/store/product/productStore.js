@@ -10,6 +10,18 @@ const useProductStore = create(devtools(immer((set) => ({
   isSuccess: false,
   message: '',
   createdProduct: null,
+  selectedCurrency: 'NGN',
+  exchangeRates: null,
+
+
+  setCurrency: (currency) => {
+    set({ userCurrency: currency });
+  },
+
+  setExchangeRates: (rates) => {
+    set({ exchangeRates: rates });
+  },
+
   getProducts: async () => {
     set({ isLoading: true });
     try {
@@ -43,6 +55,7 @@ const initialState = {
   isSuccess: false,
   message: '',
   createdProduct: null,
+  selectedCurrency: 'NGN',
 };
 
 export default useProductStore;

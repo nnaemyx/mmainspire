@@ -9,60 +9,25 @@ import {
 } from "@/icon";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import useUserStore from "@/store/user/userStore";
 import { getUserFromLocalStorage } from "@/utils/Localstorage";
-// import { useAuth } from "@/utils/auth";
+
 
 const Navbar = () => {
   const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState("NGN"); // Default to Naira
   const [bg, setBg] = useState(false);
-  const { isLeftOpen, openLeft, closeLeft } = useCustomContext();
+  const {
+    isLeftOpen,
+    openLeft,
+    closeLeft,
+    selectedCurrency,
+    handleCurrencyChange,
+  } = useCustomContext();
 
-  // const { user } = useAuth();
   const user = useUserStore((state) => state.user);
-
-  const menuVariants = {
-    initial: { left: "-100%" },
-    animate: { left: 0, transition: { duration: 0.5 } },
-  };
-
-  // Define a transition for the menu items
-  const menuItemVariants = {
-    initial: { x: -20, opacity: 0 },
-    animate: { x: 0, opacity: 1, transition: { duration: 0.5 } },
-  };
-  const closeVariants = {
-    open: { opacity: 1, x: 0 },
-    animate: { transition: { duration: 0.5 } },
-    closed: { opacity: 1, transition: { duration: 0.5 } },
-  };
-
-  const exchangeRates = {
-    NGN: 1, // 1 NGN is equal to 1 NGN (base currency)
-    USD: 0.0027, // Replace with the actual exchange rate (NGN to USD)
-    // Add more exchange rates for other currencies
-  };
-
-  const handleCurrencyChange = (newCurrency) => {
-    setSelectedCurrency(newCurrency);
-    setIsCurrencyDropdownOpen(false);
-  };
   const toggleCurrencyDropdown = () => {
     setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen);
-  };
-
-  // Sample product prices in NGN
-  const productPrices = {
-    product1: 1500,
-    product2: 2000,
-    // Add more product prices
-  };
-
-  const convertPriceToCurrency = (price) => {
-    return (price * exchangeRates[selectedCurrency]).toFixed(2);
   };
 
   useEffect(() => {
@@ -162,31 +127,31 @@ const Navbar = () => {
 
         <div className="lg:flex hidden text-[18px] font-opensans gap-[30px] ">
           <Link href="/">
-            <p className="mx-2">Home</p>
+            <p className="mx-2 text-[15px]">Home</p>
           </Link>
           <Link href="/shop">
-            <p className="mx-2">Shop</p>
+            <p className="mx-2 text-[15px]">Shop</p>
           </Link>
           <Link href="/contact">
-            <p className="mx-2">Contact</p>
+            <p className="mx-2 text-[15px]">Contact</p>
           </Link>
         </div>
         <div className="lg:flex hidden flex-col mx-auto pl-12 items-center">
-          <h1 className="text-[25px] font-futura font-semibold tracking-[1rem]">
+          <h1 className="text-[18px] font-futura font-semibold tracking-[.5rem]">
             MMA <span className="text-primary">INSPIRE</span>
           </h1>
           <Image
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698277749/mmainspire/eralwmthytkztkwamzfs.png"
-            width={100}
-            height={50}
+            width={70}
+            height={40}
             alt="logo"
           />
         </div>
         <div className="hidden lg:flex items-center justify-end gap-[28px]">
-          <div className="relative  font-opensans text-[18px] inline-block text-left">
+          <div className="relative  font-opensans text-[15px] inline-block text-left">
             <button
               onClick={toggleCurrencyDropdown}
-              className="flex text-[18px] items-center text-secondary "
+              className="flex text-[15px] items-center text-secondary "
             >
               {selectedCurrency}
               <span className="ml-2">
@@ -202,7 +167,7 @@ const Navbar = () => {
                 <div className="py-1">
                   <button
                     onClick={() => handleCurrencyChange("NGN")}
-                    className="block w-full px-4 py-2  text-[18px] text-gray-700 hover:bg-gray-100"
+                    className="block w-full px-4 py-2  text-[15px] text-gray-700 hover:bg-gray-100"
                   >
                     NGN
                   </button>
@@ -219,17 +184,17 @@ const Navbar = () => {
             )}
           </div>
           <Link href="/contact">
-            <MessageIcon className="fill-white w-[32px] h-[28px]" />
+            <MessageIcon className="fill-white " />
           </Link>
           <Link href="/contact">
-            <SearchIcon className="fill-white w-[30px] h-[30px]" />
+            <SearchIcon className="fill-white" />
           </Link>
 
           {/* AccountIcon2 for logged-out state */}
           {user ? ( // Conditionally render content based on user state
             // User is logged in
             <Link href="/account">
-              <AccountIcon2 className="fill-primary w-[30px] h-[29px]" />{" "}
+              <AccountIcon2 className="fill-primary " />{" "}
               {/* Display the user's name */}
               {/* You can also add a Logout button here */}
             </Link>
@@ -240,7 +205,7 @@ const Navbar = () => {
             </Link>
           )}
           <Link href="/about">
-            <CartIcon className="fill-white w-[32px] h-[30px]" />
+            <CartIcon className="fill-white " />
           </Link>
         </div>
         {/* Mobile Menu (Hamburger Menu) */}

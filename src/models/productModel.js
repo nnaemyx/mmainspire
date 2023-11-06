@@ -24,6 +24,9 @@ if (!mongoose.models.Product) {
         type: Number,
         required: true,
       },
+      usdPrice: {
+        type: Number,
+      },
       category: {
         type: String,
         required: true,
