@@ -15,7 +15,7 @@ import { getUserFromLocalStorage } from "@/utils/Localstorage";
 
 
 const Navbar = () => {
-  const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
+
   const [bg, setBg] = useState(false);
   const {
     isLeftOpen,
@@ -23,6 +23,8 @@ const Navbar = () => {
     closeLeft,
     selectedCurrency,
     handleCurrencyChange,
+    setIsCurrencyDropdownOpen,
+    isCurrencyDropdownOpen
   } = useCustomContext();
 
   const user = useUserStore((state) => state.user);

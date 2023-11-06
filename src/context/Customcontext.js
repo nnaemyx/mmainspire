@@ -8,6 +8,7 @@ export const CustomContextProvider = ({ children }) => {
   const [isLeftOpen, setIsLeftOpen] = useState(false);
   const [isRightOpen, setIsRightOpen] = useState(false);
   const [isBottomOpen, setIsBottomOpen] = useState(false);
+  const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
 
   const initialCurrency = () => {
     if (typeof window !== "undefined") {
@@ -24,6 +25,7 @@ export const CustomContextProvider = ({ children }) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedcurrency", newCurrency);
     }
+    setIsCurrencyDropdownOpen(false);
     // Store the new currency in local storage
     
   };
@@ -50,6 +52,8 @@ export const CustomContextProvider = ({ children }) => {
         openBottom,
         closeBottom,
         selectedCurrency,
+        isCurrencyDropdownOpen,
+        setIsCurrencyDropdownOpen,
         handleCurrencyChange,
       }}
     >
