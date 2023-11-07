@@ -70,6 +70,9 @@ const Productlist = () => {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Category
             </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Tags
+            </th>
          
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Price
@@ -94,6 +97,7 @@ const Productlist = () => {
                 <td className="px-6 py-4 whitespace-nowrap">{product.title}</td> 
               </div>
               <td className="px-6 py-4 whitespace-nowrap">{product.category}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{product.tags}</td>
               {/* <td className="px-6 py-4 whitespace-nowrap">
                 <span
                   className="bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-xs font-semibold"

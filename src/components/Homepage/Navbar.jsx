@@ -5,6 +5,8 @@ import {
   DropUpIcon,
   DropdownIcon,
   MessageIcon,
+  MinusIcon,
+  PlusIcon,
   SearchIcon,
 } from "@/icon";
 import Image from "next/image";
@@ -12,11 +14,29 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import useUserStore from "@/store/user/userStore";
 import { getUserFromLocalStorage } from "@/utils/Localstorage";
-
+import useProductStore from "@/store/product/productStore";
+import Shopdropdown from "./Shopdropdown";
 
 const Navbar = () => {
-
   const [bg, setBg] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleContent = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleMouseEnter = () => {
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseNavEnter = () => {
+    setIsDropdownOpen(false);
+  };
+  const handleMouseLeave = () => {
+    setIsDropdownOpen(false);
+  };
+
   const {
     isLeftOpen,
     openLeft,
@@ -24,10 +44,17 @@ const Navbar = () => {
     selectedCurrency,
     handleCurrencyChange,
     setIsCurrencyDropdownOpen,
-    isCurrencyDropdownOpen
+    isCurrencyDropdownOpen,
   } = useCustomContext();
 
   const user = useUserStore((state) => state.user);
+  const productStore = useProductStore();
+  useEffect(() => {
+    productStore.getProducts();
+    // Fetch exchange rates when the component mounts
+  }, []);
+  const newArrivalProducts = productStore.products;
+
   const toggleCurrencyDropdown = () => {
     setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen);
   };
@@ -51,6 +78,8 @@ const Navbar = () => {
     }
   }, []);
 
+  const productLinks = ["/account", "/shop", "/contact"];
+
   return (
     <nav
       className={`${
@@ -61,6 +90,7 @@ const Navbar = () => {
             "bg-none z-10"
       }
   fixed left-0 lg:py-6 py-5 z-10 bg-dark text-secondary w-full transition-all  duration-200`}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="md:px-8 px-4  mx-auto items-center flex justify-between">
         {/* Mobile Menu */}
@@ -127,19 +157,81 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="lg:flex hidden text-[18px] font-opensans gap-[30px] ">
-          <Link href="/">
-            <p className="mx-2 text-[15px]">Home</p>
+        <div className="lg:flex hidden font-opensans gap-[30px] ">
+          <Link
+            onMouseEnter={handleMouseNavEnter}
+            href="/"
+            className="relative group"
+          >
+            <p className="text-[15px]">Home</p>
+            <span className="absolute inset-x-0  bottom-0  bg-primary transition-transform transform translate-y-full group-hover:border boder-solid border-primary group-hover:translate-x-0 ease-in-out "></span>
           </Link>
-          <Link href="/shop">
-            <p className="mx-2 text-[15px]">Shop</p>
+          <div className="relative group w-full">
+            <Link
+              href="/shop"
+              className="relative group w-full"
+              onMouseEnter={handleMouseEnter}
+            >
+              <p className="text-[15px]">Shop</p>
+              <span
+                className={`absolute inset-x-0 bottom-0 bg-primary transition-transform transform group-hover:translate-y-full ease-in-out ${
+                  isDropdownOpen ? "border border-solid border-primary" : ""
+                }`}
+              ></span>
+            </Link>
+
+            {/* Add your dropdown content here */}
+            {isDropdownOpen && (
+              <div
+                onMouseLeave={handleMouseLeave}
+                className="absolute top-14 -left-[7rem] w-[1700px]  bg-dark shadow-md mt-2"
+              >
+                <div className="flex gap-16 py-8 items-start font-opensans text-[15px] mx-auto justify-center ">
+                  <div className="mt-8">
+                    <h2 className="font-semibold">CLOTHING</h2>
+                    <ul className="leading-[2rem] mt-2">
+                      <li>Dresses</li>
+                      <li>Kaftans</li>
+                      <li>Kimonos</li>
+                      <li>Co-ords</li>
+                      <li>Tops</li>
+                      <li>Skirts</li>
+                      <li>Trousers</li>
+                    </ul>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-8">
+                    {newArrivalProducts.slice(1, 4).map((product, index) => (
+                      <div key={index}>
+                        <Link href={productLinks[index]}>
+                          <Image
+                            src={product.images[0]}
+                            alt="images"
+                            width={300}
+                            height={250}
+                          />
+                          <p className="mt-4 font-semibold">
+                            {product.category}
+                          </p>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <Link
+            href="/contact"
+            onMouseEnter={handleMouseNavEnter}
+            className="relative group"
+          >
+            <p className="text-[15px]">Contact</p>
+            <span className="absolute inset-x-0  bottom-0  bg-primary transition-transform transform translate-y-full group-hover:border boder-solid border-primary group-hover:translate-x-0 ease-in-out "></span>
           </Link>
-          <Link href="/contact">
-            <p className="mx-2 text-[15px]">Contact</p>
-          </Link>
-          <Link href="/admin">
-            <p className="mx-2 text-[15px]">Admin</p>
-          </Link>
+          {/* <Link href="/admin" className="relative group">
+            <p className=" text-[15px]">Admin</p>
+            <span className="absolute inset-x-0  bottom-0  bg-primary transition-transform transform translate-y-full group-hover:border boder-solid border-primary group-hover:translate-x-0 ease-in-out "></span>
+          </Link> */}
         </div>
         <div className="lg:flex hidden flex-col mx-auto pl-12 items-center">
           <h1 className="text-[18px] font-futura font-semibold tracking-[.5rem]">
@@ -206,7 +298,7 @@ const Navbar = () => {
           ) : (
             // User is not logged in
             <Link href="/authentication/Register">
-              <AccountIcon2 className="fill-white w-[30px] h-[29px]" />
+              <AccountIcon2 className="fill-white" />
             </Link>
           )}
           <Link href="/about">
@@ -220,8 +312,8 @@ const Navbar = () => {
               isLeftOpen ? "left-0 transition-all" : "-left-full"
             } lg:hidden fixed bottom-0 w-[80%] max-w-xs h-screen transition-all`}
           >
-            <div className="flex flex-col justify-between items-start leading-[3rem] bg-white h-full w-[120%] ">
-              <div className="w-full">
+            <div className="flex flex-col justify-between  items-start leading-[3rem] bg-white h-full w-[120%] ">
+              <div className="overflow-y-auto w-full overflow-x-hidden ">
                 <button
                   onClick={closeLeft}
                   className="px-6 py-2 mt-[4rem] text-dark"
@@ -231,13 +323,28 @@ const Navbar = () => {
                   </svg>
                 </button>
                 <div className="font-futura flex flex-col divide-y w-full uppercase font-semibold text-dark px-6">
-                  <Link href="/">
+                  <Link href="/"  onClick={closeLeft}>
                     <p className="py-2">Home</p>
                   </Link>
-                  <Link href="/shop">
-                    <p className="py-2">Shop</p>
-                  </Link>
-                  <Link href="/contact">
+                  <div className="w-full">
+                    <div
+                      className="flex items-center  justify-between"
+                      onClick={toggleContent}
+                    >
+                      <p className="py-2">Shop</p>
+                      <div
+                        className={`w-4 h-4 ml-2 transition-transform transform ${
+                          isExpanded ? "rotate-180" : "rotate-0"
+                        }`}
+                      >
+                        {isExpanded ? <MinusIcon /> : <PlusIcon />}
+                      </div>
+                    </div>
+                    {isExpanded && (
+                      <Shopdropdown/>
+                    )}
+                  </div>
+                  <Link href="/contact"  onClick={closeLeft}>
                     <p className="py-2">Contact</p>
                   </Link>
                 </div>
@@ -245,7 +352,7 @@ const Navbar = () => {
               <div className="text-dark px-6 w-full divide-y">
                 {user ? (
                   <>
-                    <Link href="/account" className="flex gap-2 items-center">
+                    <Link  onClick={closeLeft} href="/account" className="flex gap-2 items-center">
                       <AccountIcon2 className="fill-dark w-[20px] h-[20px]" />
                       <h2 className="text-[14px] font-opensans">
                         Hello, {user.name}
@@ -255,6 +362,7 @@ const Navbar = () => {
                 ) : (
                   <div className="flex gap-2 items-center">
                     <Link
+                     onClick={closeLeft}
                       href="/authentication/Register"
                       className="flex gap-2 items-center"
                     >

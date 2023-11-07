@@ -73,12 +73,14 @@ export const AccountIcon2 = ({ className }) => (
       stroke="currentColor"
       strokeWidth="1.3"
       strokeLinejoin="round"
+      className={`${className}`}
     ></circle>
     <path
       d="M1 17v0a4 4 0 014-4h8a4 4 0 014 4v0"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.3"
+      className={`${className}`}
     ></path>
   </svg>
 );
@@ -334,5 +336,29 @@ export const SearchIcon = ({ className }) => (
       stroke="currentColor"
       strokeWidth="1.3"
     ></path>
+  </svg>
+);
+
+export const PlusIcon = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="18"
+    height="18"
+    className={`${className}`}
+  >
+    <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
+  </svg>
+);
+
+export const MinusIcon = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="18"
+    height="18"
+    className={`${className}`}
+  >
+    <path d="M5 11V13H19V11H5Z"></path>
   </svg>
 );
