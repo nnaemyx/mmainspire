@@ -78,7 +78,7 @@ const Navbar = () => {
     }
   }, []);
 
-  const productLinks = ["/account", "/shop", "/contact"];
+  const productLinks = ["/account", "/collections/shop", "/contact"];
 
   return (
     <nav
@@ -168,7 +168,7 @@ const Navbar = () => {
           </Link>
           <div className="relative group w-full">
             <Link
-              href="/shop"
+              href="/collections/shop"
               className="relative group w-full"
               onMouseEnter={handleMouseEnter}
             >
@@ -184,7 +184,7 @@ const Navbar = () => {
             {isDropdownOpen && (
               <div
                 onMouseLeave={handleMouseLeave}
-                className="absolute top-14 -left-[7rem] w-[1700px]  bg-dark shadow-md mt-2"
+                className="absolute top-14 -left-[7rem] 2xl:w-[1700px] xl:w-[1400px]  bg-dark shadow-md mt-2"
               >
                 <div className="flex gap-16 py-8 items-start font-opensans text-[15px] mx-auto justify-center ">
                   <div className="mt-8">
@@ -199,7 +199,7 @@ const Navbar = () => {
                       <li>Trousers</li>
                     </ul>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-8">
+                  <div className="grid grid-cols-2 place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-8">
                     {newArrivalProducts.slice(1, 4).map((product, index) => (
                       <div key={index}>
                         <Link href={productLinks[index]}>
@@ -208,6 +208,14 @@ const Navbar = () => {
                             alt="images"
                             width={300}
                             height={250}
+                            className="xl:hidden 2xl:flex"
+                          />
+                            <Image
+                            src={product.images[0]}
+                            alt="images"
+                            width={200}
+                            height={150}
+                            className="2xl:hidden flex"
                           />
                           <p className="mt-4 font-semibold">
                             {product.category}

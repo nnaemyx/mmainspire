@@ -23,7 +23,7 @@ const Shopdropdown = () => {
     // Fetch exchange rates when the component mounts
   }, []);
   const newArrivalProducts = productStore.products;
-  const productLinks = ["/account", "/shop", "/contact"];
+  const productLinks = ["/account", "/collections/shop", "/contact"];
 
   const { closeLeft } = useCustomContext();
 
