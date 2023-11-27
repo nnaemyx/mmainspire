@@ -4,21 +4,21 @@ import React from "react";
 const Hero = () => {
   return (
     <div className="w-full relative ">
-      <div className="flex  ">
+      <div className="flex">
         <div>
           <Image
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"
-            width={820}
+            width={880}
             height={1126}
             alt="hero-image1"
             className="hidden lg:flex"
           />
            <Image
             src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"
-            width={980}
+            width={880}
             height={1126}
             alt="hero-image1"
-            className="lg:hidden block"
+            className="lg:hidden  block"
           />
         </div>
         <div className="hidden lg:flex">
@@ -27,6 +27,7 @@ const Hero = () => {
             width={821}
             height={1126}
             alt="hero-image2"
+            className="w-full"
           />
         </div>
       </div>

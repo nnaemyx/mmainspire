@@ -68,11 +68,9 @@ const Navbar = () => {
   });
 
   useEffect(() => {
-    // On the client side, check for local storage data
     if (typeof window !== "undefined") {
       const userFromLocalStorage = getUserFromLocalStorage();
       if (userFromLocalStorage) {
-        // Update the user state in Zustand
         useUserStore.setState({ user: userFromLocalStorage });
       }
     }
