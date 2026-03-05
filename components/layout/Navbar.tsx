@@ -79,7 +79,7 @@ export default function Navbar() {
 
       {/* Mobile full-screen overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-[100] bg-canvas flex flex-col items-center justify-center gap-10">
+        <div className="fixed inset-0 z-100 bg-canvas flex flex-col items-center justify-center gap-10">
           <button
             className="absolute top-5 right-6 text-cream/60 hover:text-cream transition-colors"
             onClick={() => setMobileOpen(false)}
