@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ItemCard from "@/components/ui/ItemCard";
-import { collectionItems } from "@/lib/mock-items";
+import connectToDatabase from "@/lib/db";
+import Clothing from "@/lib/models/Clothing";
+import SiteAsset from "@/lib/models/SiteAsset";
+import { getAssetUrl } from "@/lib/default-assets";
 import { FadeUp, StaggerChildren, StaggerItem } from "@/components/ui/AnimateOnView";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Traditional Wear — MmaInspire Collections",
   description:
     "Explore MmaInspire's Traditional Wear collection — vibrant Ankara, George, Aso-oke and Adire pieces hand-crafted in Onitsha, Nigeria.",
 };
-
-const items = collectionItems.filter((i) => i.collectionId === "traditional-wear");
 
 const details = [
   "Custom-tailored to your measurements",
@@ -19,7 +22,25 @@ const details = [
   "Gele and headwrap styling available",
 ];
 
-export default function TraditionalWearPage() {
+export default async function TraditionalWearPage() {
+  await connectToDatabase();
+  const [dbItems, rawAssets] = await Promise.all([
+    Clothing.find({ category: "traditional-wear" }).sort({ createdAt: -1 }),
+    SiteAsset.find({ key: { $in: ["trad-wear-hero", "trad-wear-cta"] } }).lean(),
+  ]);
+
+  const assets = (rawAssets as any[]).map((a) => ({ key: a.key, imageUrl: a.imageUrl }));
+  const heroImage = getAssetUrl("trad-wear-hero", assets);
+  const ctaImage = getAssetUrl("trad-wear-cta", assets);
+
+  const items = dbItems.map((item) => ({
+    id: item._id.toString(),
+    name: item.title,
+    tag: "Traditional Wear",
+    image: item.imageUrl,
+    attribution: "MmaInspire",
+  }));
+
   return (
     <div className="bg-canvas">
       {/* ── Hero ──────────────────────────────────────────── */}
@@ -28,8 +49,8 @@ export default function TraditionalWearPage() {
         style={{ minHeight: "75vh", display: "flex", alignItems: "flex-end" }}
       >
         <img
-          src="https://images.pexels.com/photos/32703119/pexels-photo-32703119.jpeg"
-          alt="Striking portrait of a woman in colorful traditional attire and headwrap — Okiki Onipede on Pexels"
+          src={heroImage}
+          alt="Traditional Wear — MmaInspire"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Gradient — stronger at bottom for text, lighter at top */}
@@ -87,20 +108,24 @@ export default function TraditionalWearPage() {
           <div className="w-10 h-px bg-brand mt-5" />
         </FadeUp>
 
-        <StaggerChildren className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6">
-          {items.map((item) => (
-            <StaggerItem key={item.id}>
-              <ItemCard {...item} />
-            </StaggerItem>
-          ))}
-        </StaggerChildren>
+        {items.length === 0 ? (
+          <p className="font-body text-sm text-muted py-8">No pieces have been added to this collection yet. Check back soon.</p>
+        ) : (
+          <StaggerChildren className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6">
+            {items.map((item) => (
+              <StaggerItem key={item.id}>
+                <ItemCard {...item} />
+              </StaggerItem>
+            ))}
+          </StaggerChildren>
+        )}
       </section>
 
       {/* ── CTA ───────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-t border-[rgba(255,255,255,0.07)]">
         <img
-          src="https://images.pexels.com/photos/28733460/pexels-photo-28733460.jpeg"
-          alt="A model in elegant traditional attire styled with green rollers outdoors in Abuja — Abdullahi Santuraki on Pexels"
+          src={ctaImage}
+          alt="Commission a bespoke traditional wear piece — MmaInspire"
           className="absolute inset-0 w-full h-full object-cover object-center"
           loading="lazy"
         />
@@ -113,7 +138,7 @@ export default function TraditionalWearPage() {
             className="font-display italic text-cream mb-10 max-w-lg"
             style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}
           >
-            Want something bespoke? Let's create it together.
+            Want something bespoke? Let&apos;s create it together.
           </h2>
           <div className="flex flex-wrap gap-4">
             <Link

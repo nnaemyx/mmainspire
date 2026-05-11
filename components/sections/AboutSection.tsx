@@ -1,11 +1,15 @@
 import Link from "next/link";
 
-export default function AboutSection() {
+interface AboutSectionProps {
+  aboutImage: string;
+}
+
+export default function AboutSection({ aboutImage }: AboutSectionProps) {
   return (
     <section className="bg-canvas py-24 md:py-36 overflow-hidden">
       <div className="max-w-7xl mx-auto px-8 md:px-16 grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-28 items-center">
         {/* Text */}
-        <div>
+        <div className="flex flex-col items-center text-center md:items-start md:text-left">
           <span className="font-body text-[9px] tracking-[0.5em] uppercase text-brand mb-6 block">
             Our Story
           </span>
@@ -17,7 +21,7 @@ export default function AboutSection() {
             <br />
             inspired by you.
           </h2>
-          <div className="w-10 h-px bg-brand mb-8" />
+          <div className="w-10 h-px bg-brand mb-8 mx-auto md:mx-0" />
           <p className="font-body text-sm text-muted leading-loose tracking-wide mb-5 max-w-md">
             MmaInspire is a premium fashion house rooted in the rich cultural heritage of Anambra State, Nigeria. Founded with a deep passion for celebrating African elegance, we craft bespoke pieces that honor tradition while embracing modernity.
           </p>
@@ -48,8 +52,8 @@ export default function AboutSection() {
           {/* Image */}
           <div className="relative">
             <img
-              src="https://images.pexels.com/photos/14452561/pexels-photo-14452561.jpeg"
-              alt="Stylish African woman in traditional dress in professional studio — Ali Drabo on Pexels"
+              src={aboutImage}
+              alt="Stylish African woman in traditional dress"
               className="w-full object-cover"
               style={{ aspectRatio: "3/4" }}
               loading="lazy"

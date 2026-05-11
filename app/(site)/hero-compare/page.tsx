@@ -21,7 +21,7 @@ export default function HeroComparePage() {
             Dark Overlay
           </p>
         </div>
-        <HeroSection />
+        <HeroSection heroImage={""} />
       </div>
 
       {/* Divider */}

@@ -5,35 +5,43 @@ import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FadeUp, StaggerChildren, StaggerItem } from "@/components/ui/AnimateOnView";
 
-const collections = [
-  {
-    title: "Traditional Wear",
-    description:
-      "Celebrating culture with vibrant, authentic Nigerian traditional attire crafted for every occasion.",
-    image: "https://images.pexels.com/photos/32703119/pexels-photo-32703119.jpeg",
-    attribution: "Okiki Onipede on Pexels",
-    href: "/collections/traditional-wear",
-  },
-  {
-    title: "Asoebi",
-    description:
-      "Elegant lace and aso-oke designs that unify and celebrate at weddings, ceremonies, and events.",
-    image: "https://images.pexels.com/photos/12118377/pexels-photo-12118377.jpeg",
-    attribution: "Korede Adenola on Pexels",
-    href: "/collections/asoebi",
-  },
-  {
-    title: "Wedding Gowns",
-    description:
-      "Bespoke bridal gowns that transform dreams into breathtaking reality on your most special day.",
-    image: "https://images.pexels.com/photos/8271275/pexels-photo-8271275.jpeg",
-    attribution: "Deffo Manizo on Pexels",
-    href: "/collections/wedding-gowns",
-  },
-];
+interface CollectionsSectionProps {
+  images: {
+    traditional: string;
+    asoebi: string;
+    wedding: string;
+  };
+}
 
-export default function CollectionsSection() {
+export default function CollectionsSection({ images }: CollectionsSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const collections = [
+    {
+      title: "Traditional Wear",
+      description:
+        "Celebrating culture with vibrant, authentic Nigerian traditional attire crafted for every occasion.",
+      image: images.traditional,
+      attribution: "MmaInspire",
+      href: "/collections/traditional-wear",
+    },
+    {
+      title: "Asoebi",
+      description:
+        "Elegant lace and aso-oke designs that unify and celebrate at weddings, ceremonies, and events.",
+      image: images.asoebi,
+      attribution: "MmaInspire",
+      href: "/collections/asoebi",
+    },
+    {
+      title: "Wedding Gowns",
+      description:
+        "Bespoke bridal gowns that transform dreams into breathtaking reality on your most special day.",
+      image: images.wedding,
+      attribution: "MmaInspire",
+      href: "/collections/wedding-gowns",
+    },
+  ];
 
   function scroll(dir: "left" | "right") {
     if (!scrollRef.current) return;

@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeUp, SlideInLeft, SlideInRight, StaggerChildren, StaggerItem } from "@/components/ui/AnimateOnView";
+import connectToDatabase from "@/lib/db";
+import SiteAsset from "@/lib/models/SiteAsset";
+import { getAssetUrl } from "@/lib/default-assets";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Our Story — MmaInspire",
@@ -26,7 +31,18 @@ const values = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  await connectToDatabase();
+  const rawAssets = await SiteAsset.find({
+    key: { $in: ["about-hero", "about-story", "about-ceo", "about-cta"] },
+  }).lean();
+
+  const assets = (rawAssets as any[]).map((a) => ({ key: a.key, imageUrl: a.imageUrl }));
+  const heroImage = getAssetUrl("about-hero", assets);
+  const storyImage = getAssetUrl("about-story", assets);
+  const ceoImage = getAssetUrl("about-ceo", assets);
+  const ctaImage = getAssetUrl("about-cta", assets);
+
   return (
     <div className="bg-canvas">
       {/* ── Hero ──────────────────────────────────────────── */}
@@ -35,8 +51,8 @@ export default function AboutPage() {
         style={{ minHeight: "70vh", display: "flex", alignItems: "flex-end" }}
       >
         <img
-          src="https://images.pexels.com/photos/29133855/pexels-photo-29133855.jpeg"
-          alt="Stylish African woman presenting chic fashion outdoors in Nigeria — Darkshade Photos on Pexels"
+          src={heroImage}
+          alt="About MmaInspire — Premium Bespoke Fashion"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-canvas via-black/50 to-transparent" />
@@ -68,8 +84,8 @@ export default function AboutPage() {
               />
               <div className="relative">
                 <img
-                  src="https://images.pexels.com/photos/16669744/pexels-photo-16669744.jpeg"
-                  alt="African woman in vibrant patterned outfit posing confidently in studio — Ali Drabo on Pexels"
+                  src={storyImage}
+                  alt="Our Story — MmaInspire Fashion"
                   className="w-full object-cover"
                   style={{ aspectRatio: "3/4" }}
                   loading="lazy"
@@ -121,39 +137,47 @@ export default function AboutPage() {
           </FadeUp>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-24 items-center">
-            {/* CEO Portrait Placeholder */}
+            {/* CEO Portrait */}
             <SlideInLeft>
               <div className="relative">
-                {/* Decorative border offset */}
                 <div
                   className="absolute border border-brand/25"
                   style={{ top: "-20px", right: "-20px", width: "100%", height: "100%" }}
                   aria-hidden="true"
                 />
                 <div className="relative">
-                  {/* Placeholder frame — engineer will replace with actual CEO photo */}
-                  <div
-                    className="w-full bg-surface border border-cream/10 flex flex-col items-center justify-center gap-5"
-                    style={{ aspectRatio: "3/4" }}
-                  >
-                    {/* Monogram ring */}
-                    <div className="w-24 h-24 border border-brand/40 flex items-center justify-center">
-                      <span
-                        className="font-display italic text-cream/30"
-                        style={{ fontSize: "2.5rem" }}
-                      >
-                        M
-                      </span>
+                  {ceoImage ? (
+                    <img
+                      src={ceoImage}
+                      alt="MmaInspire Founder & Creative Director"
+                      className="w-full object-cover"
+                      style={{ aspectRatio: "3/4" }}
+                      loading="lazy"
+                    />
+                  ) : (
+                    /* Placeholder — shown until CEO photo is uploaded via admin */
+                    <div
+                      className="w-full bg-surface border border-cream/10 flex flex-col items-center justify-center gap-5"
+                      style={{ aspectRatio: "3/4" }}
+                    >
+                      <div className="w-24 h-24 border border-brand/40 flex items-center justify-center">
+                        <span
+                          className="font-display italic text-cream/30"
+                          style={{ fontSize: "2.5rem" }}
+                        >
+                          M
+                        </span>
+                      </div>
+                      <div className="text-center">
+                        <p className="font-body text-[9px] tracking-[0.5em] uppercase text-muted mb-1">
+                          Photo Coming Soon
+                        </p>
+                        <p className="font-body text-[8px] tracking-[0.3em] uppercase text-muted/50">
+                          Upload via Admin → Site Images
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-center">
-                      <p className="font-body text-[9px] tracking-[0.5em] uppercase text-muted mb-1">
-                        Photo Coming Soon
-                      </p>
-                      <p className="font-body text-[8px] tracking-[0.3em] uppercase text-muted/50">
-                        CEO Portrait
-                      </p>
-                    </div>
-                  </div>
+                  )}
                   {/* Brand left accent line */}
                   <div className="absolute top-0 left-0 bottom-0 w-0.5 bg-brand/60" aria-hidden="true" />
                 </div>
@@ -164,13 +188,13 @@ export default function AboutPage() {
             <SlideInRight>
               <div>
                 <span className="font-body text-[9px] tracking-[0.5em] uppercase text-brand mb-5 block">
-                  Founder & Creative Director
+                  Founder &amp; Creative Director
                 </span>
                 <h3
                   className="font-display italic text-cream leading-tight mb-4"
                   style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
                 >
-                  [CEO Name]
+                  Mrs. Chidimma Obidozie
                 </h3>
                 <div className="w-10 h-px bg-brand mb-8" />
                 <p className="font-body text-sm text-muted leading-loose tracking-wide mb-5">
@@ -226,15 +250,15 @@ export default function AboutPage() {
       {/* ── CTA ───────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-t border-[rgba(255,255,255,0.07)]">
         <img
-          src="https://images.pexels.com/photos/14452561/pexels-photo-14452561.jpeg"
-          alt="Stylish African woman in traditional dress in studio — Ali Drabo on Pexels"
+          src={ctaImage}
+          alt="Let's create something beautiful — MmaInspire"
           className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
         />
         <div className="absolute inset-0 bg-black/75" />
         <FadeUp className="relative z-10 py-28 px-8 text-center">
           <span className="font-body text-[9px] tracking-[0.5em] uppercase text-brand mb-5 block">
-            Let's Work Together
+            Let&apos;s Work Together
           </span>
           <h2
             className="font-display italic text-cream mb-10"

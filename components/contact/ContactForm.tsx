@@ -40,13 +40,41 @@ export default function ContactForm() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    
+    try {
+      // 1. Save to DB
+      await fetch("/api/enquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      // 2. Format WhatsApp Message
+      const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || "2348000000000"; 
+      const text = `Hello MmaInspire, I am making an enquiry:
+Name: ${form.name}
+Email: ${form.email}
+Phone: ${form.phone || "N/A"}
+Collection: ${form.collection || "N/A"}
+Event Date: ${form.eventDate || "N/A"}
+
+Message: ${form.message}`;
+
+      const waUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(text)}`;
+      
+      // 3. Open WhatsApp in new tab
+      window.open(waUrl, "_blank");
+
       setSubmitted(true);
-    }, 1200);
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const inputClass =
@@ -138,19 +166,19 @@ export default function ContactForm() {
       </form>
 
       {/* Contact Info sidebar */}
-      <aside className="lg:col-span-2 flex flex-col gap-10 lg:pt-4">
-        <div>
+      <aside className="lg:col-span-2 flex flex-col items-center text-center md:items-start md:text-left gap-10 lg:pt-4">
+        <div className="flex flex-col items-center md:items-start w-full">
           <h3 className="font-display text-2xl italic text-cream mb-6">Contact Information</h3>
           <div className="space-y-6">
-            <div className="flex items-start gap-4">
-              <MapPin size={14} className="text-brand mt-1 shrink-0" />
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-3 md:gap-4">
+              <MapPin size={14} className="text-brand md:mt-1 shrink-0" />
               <div>
                 <p className="font-body text-[9px] tracking-[0.4em] uppercase text-brand mb-1">Location</p>
                 <p className="font-body text-sm text-muted tracking-wide leading-relaxed">Onitsha, Anambra State, Nigeria</p>
               </div>
             </div>
-            <div className="flex items-start gap-4">
-              <Mail size={14} className="text-brand mt-1 shrink-0" />
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-3 md:gap-4">
+              <Mail size={14} className="text-brand md:mt-1 shrink-0" />
               <div>
                 <p className="font-body text-[9px] tracking-[0.4em] uppercase text-brand mb-1">Email</p>
                 <a href="mailto:hello@mmainspire.com" className="font-body text-sm text-muted hover:text-brand transition-colors tracking-wide">
@@ -158,8 +186,8 @@ export default function ContactForm() {
                 </a>
               </div>
             </div>
-            <div className="flex items-start gap-4">
-              <Instagram size={14} className="text-brand mt-1 shrink-0" />
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-3 md:gap-4">
+              <Instagram size={14} className="text-brand md:mt-1 shrink-0" />
               <div>
                 <p className="font-body text-[9px] tracking-[0.4em] uppercase text-brand mb-1">Instagram</p>
                 <a href="https://instagram.com/mmainspire" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-muted hover:text-brand transition-colors tracking-wide">
@@ -170,14 +198,14 @@ export default function ContactForm() {
           </div>
         </div>
 
-        <div className="border-t border-[rgba(255,255,255,0.08)] pt-10">
+        <div className="border-t border-[rgba(255,255,255,0.08)] pt-10 flex flex-col items-center md:items-start w-full">
           <h4 className="font-body text-[9px] tracking-[0.4em] uppercase text-brand mb-4">Response Time</h4>
           <p className="font-body text-sm text-muted leading-loose tracking-wide">
             We typically respond within 24–48 hours. For urgent requests, please reach out via Instagram DM.
           </p>
         </div>
 
-        <div className="bg-surface border border-[rgba(255,255,255,0.07)] p-6">
+        <div className="bg-surface border border-[rgba(255,255,255,0.07)] p-6 flex flex-col items-center md:items-start w-full">
           <p className="font-body text-[9px] tracking-[0.4em] uppercase text-brand mb-3">✦ Worldwide Shipping</p>
           <p className="font-body text-xs text-muted leading-loose tracking-wide">
             We ship bespoke pieces to clients across Nigeria and internationally. Delivery timelines are discussed during consultation.

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ItemCard from "@/components/ui/ItemCard";
-import { collectionItems } from "@/lib/mock-items";
+import connectToDatabase from "@/lib/db";
+import Clothing from "@/lib/models/Clothing";
+import SiteAsset from "@/lib/models/SiteAsset";
+import { getAssetUrl } from "@/lib/default-assets";
 
 export const metadata: Metadata = {
   title: "Collections — MmaInspire",
@@ -9,7 +12,7 @@ export const metadata: Metadata = {
     "Explore MmaInspire's curated collections: Traditional Wear, Asoebi, and Wedding Gowns. Bespoke fashion crafted in Onitsha, Nigeria.",
 };
 
-const collections = [
+const collectionsMeta = [
   {
     id: "traditional-wear",
     href: "/collections/traditional-wear",
@@ -23,12 +26,8 @@ const collections = [
       "Available for all occasions",
       "Gele and headwrap styling available",
     ],
-    image: "https://images.pexels.com/photos/32703119/pexels-photo-32703119.jpeg",
-    imageAlt:
-      "Striking portrait of a woman in colorful traditional attire and headwrap — Okiki Onipede on Pexels",
-    image2: "https://images.pexels.com/photos/28733460/pexels-photo-28733460.jpeg",
-    image2Alt:
-      "A model in elegant traditional attire styled with green rollers outdoors in Abuja, Nigeria — Abdullahi Santuraki on Pexels",
+    imageKey: "collection-card-traditional",
+    image2Key: "collections-page-trad-2",
   },
   {
     id: "asoebi",
@@ -43,12 +42,8 @@ const collections = [
       "Coordination for bridal trains & guests",
       "Express delivery for time-sensitive events",
     ],
-    image: "https://images.pexels.com/photos/12118377/pexels-photo-12118377.jpeg",
-    imageAlt:
-      "Two women in elegant red asoebi dresses and gele headwraps showcasing traditional African style — Korede Adenola on Pexels",
-    image2: "https://images.pexels.com/photos/29046518/pexels-photo-29046518.jpeg",
-    image2Alt:
-      "Beautiful Nigerian bride in red lace dress holding a rose — Darkshade Photos on Pexels",
+    imageKey: "collection-card-asoebi",
+    image2Key: "collections-page-asoebi-2",
   },
   {
     id: "wedding-gowns",
@@ -63,16 +58,23 @@ const collections = [
       "Beaded, lace, and silk options",
       "Matching accessories and veils",
     ],
-    image: "https://images.pexels.com/photos/8271275/pexels-photo-8271275.jpeg",
-    imageAlt:
-      "Beautiful African bride posing elegantly in a stunning wedding gown — Deffo Manizo on Pexels",
-    image2: "https://images.pexels.com/photos/11086563/pexels-photo-11086563.jpeg",
-    image2Alt:
-      "Stunning African bride in white traditional dress with turban — S and S Love Story on Pexels",
+    imageKey: "collection-card-wedding",
+    image2Key: "collections-page-wedding-2",
   },
 ];
 
-export default function CollectionsPage() {
+export const revalidate = 60;
+
+export default async function CollectionsPage() {
+  await connectToDatabase();
+  const [dbItems, rawAssets] = await Promise.all([
+    Clothing.find().sort({ createdAt: -1 }),
+    SiteAsset.find().lean(),
+  ]);
+
+  const assets = (rawAssets as any[]).map((a) => ({ key: a.key, imageUrl: a.imageUrl }));
+  const img = (key: string) => getAssetUrl(key, assets);
+
   return (
     <div className="bg-canvas">
       {/* ── Page Header ──────────────────────────────────────── */}
@@ -94,8 +96,18 @@ export default function CollectionsPage() {
       </section>
 
       {/* ── Collection Sections ──────────────────────────────── */}
-      {collections.map((col, index) => {
-        const items = collectionItems.filter((item) => item.collectionId === col.id);
+      {collectionsMeta.map((col, index) => {
+        const filteredDb = dbItems.filter((item) => item.category === col.id);
+        const items = filteredDb.map((item) => ({
+          id: item._id.toString(),
+          name: item.title,
+          tag: col.title,
+          image: item.imageUrl,
+          attribution: "MmaInspire",
+        }));
+
+        const colImage = img(col.imageKey);
+        const colImage2 = img(col.image2Key);
 
         return (
           <section
@@ -111,8 +123,8 @@ export default function CollectionsPage() {
                 style={{ minHeight: "60vh" }}
               >
                 <img
-                  src={col.image}
-                  alt={col.imageAlt}
+                  src={colImage}
+                  alt={col.title}
                   className="w-full h-full object-cover"
                   style={{ position: "absolute", inset: 0 }}
                   loading="lazy"
@@ -120,8 +132,8 @@ export default function CollectionsPage() {
                 {/* Secondary corner image */}
                 <div className="absolute bottom-6 right-6 w-32 md:w-44 border-2 border-canvas overflow-hidden">
                   <img
-                    src={col.image2}
-                    alt={col.image2Alt}
+                    src={colImage2}
+                    alt={col.title}
                     className="w-full aspect-square object-cover"
                     loading="lazy"
                   />

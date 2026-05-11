@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  heroImage: string;
+}
+
+export default function HeroSection({ heroImage }: HeroSectionProps) {
   return (
     <section className="bg-canvas overflow-hidden" style={{ minHeight: "100svh" }}>
       <div
@@ -9,13 +13,13 @@ export default function HeroSection() {
       >
         {/* ── LEFT: Editorial text ─────────────────────────── */}
         <div
-          className="relative z-10 flex flex-col justify-center px-8 md:px-14 lg:px-20 py-32 md:py-0 bg-canvas"
+          className="relative z-10 flex flex-col justify-center items-center text-center md:items-start md:text-left px-8 md:px-14 lg:px-20 py-32 md:py-0 bg-canvas"
           style={{ minHeight: "100svh" }}
         >
           {/* Mobile: image as background */}
           <div className="md:hidden absolute inset-0 -z-10">
             <img
-              src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"
+              src={heroImage}
               alt="MmaInspire fashion model"
               className="w-full h-full object-cover object-top"
             />
@@ -38,7 +42,7 @@ export default function HeroSection() {
           </h1>
 
           {/* Accent line */}
-          <div className="w-16 h-px bg-brand mb-8" />
+          <div className="w-16 h-px bg-brand mb-8 mx-auto md:mx-0" />
 
           {/* Subtext */}
           <p className="font-body text-[10px] text-muted tracking-[0.35em] uppercase mb-12 leading-loose max-w-xs">
@@ -46,7 +50,7 @@ export default function HeroSection() {
           </p>
 
           {/* CTA */}
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap justify-center md:justify-start gap-4">
             <Link
               href="/collections"
               className="inline-block font-body text-[10px] tracking-[0.35em] uppercase px-10 py-4 border border-cream text-cream hover:bg-cream hover:text-canvas transition-all duration-300"
@@ -76,7 +80,7 @@ export default function HeroSection() {
         {/* ── RIGHT: Model photo ───────────────────────────── */}
         <div className="hidden md:block relative overflow-hidden">
           <img
-            src="https://res.cloudinary.com/mmainspire/image/upload/v1698521215/mmainspire/kc3pudrbh3aij5i57ryk.jpg"
+            src={heroImage}
             alt="MmaInspire fashion model in stunning bespoke attire"
             className="absolute inset-0 w-full h-full object-cover object-top"
           />
