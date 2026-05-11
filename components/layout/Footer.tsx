@@ -35,7 +35,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-5">
             <a
-              href="https://instagram.com/mmainspire"
+              href="https://instagram.com/mma_inspire"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow MmaInspire on Instagram"
@@ -44,14 +44,14 @@ export default function Footer() {
               <Instagram size={15} />
             </a>
             <a
-              href="mailto:hello@mmainspire.com"
+              href="edehchidimma7@gmail.com"
               aria-label="Email MmaInspire"
               className="text-muted hover:text-brand transition-colors duration-300"
             >
               <Mail size={15} />
             </a>
             <a
-              href="tel:+2348000000000"
+              href="tel:+23460065236"
               aria-label="Call MmaInspire"
               className="text-muted hover:text-brand transition-colors duration-300"
             >
