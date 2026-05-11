@@ -11,7 +11,7 @@ const EnquirySchema = new mongoose.Schema(
     status: { type: String, default: "New", enum: ["New", "Responded", "Closed"] },
     interestedItemId: { type: mongoose.Schema.Types.ObjectId, ref: "Clothing" },
   },
-  { timestamps: true }
+  { timestamps: true, suppressReservedKeysWarning: true }
 );
 
 export default mongoose.models.Enquiry || mongoose.model("Enquiry", EnquirySchema);
