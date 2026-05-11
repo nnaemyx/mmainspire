@@ -102,7 +102,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="font-display text-4xl italic text-cream/80 hover:text-brand transition-colors duration-300"
+              className="font-body text-[11px] tracking-[0.35em] uppercase text-cream/80 hover:text-brand transition-colors duration-300"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
