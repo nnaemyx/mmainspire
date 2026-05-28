@@ -38,6 +38,7 @@ export default async function TraditionalWearPage() {
     name: item.title,
     tag: "Traditional Wear",
     image: item.imageUrl,
+    category: "traditional-wear" as string,
     attribution: "MmaInspire",
   }));
 

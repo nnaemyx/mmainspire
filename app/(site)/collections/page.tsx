@@ -103,6 +103,7 @@ export default async function CollectionsPage() {
           name: item.title,
           tag: col.title,
           image: item.imageUrl,
+          category: item.category,
           attribution: "MmaInspire",
         }));
 

@@ -5,6 +5,7 @@ const ClothingSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String, required: true },
     imageUrl: { type: String, required: true },
+    images: { type: [String], default: [] }, // Additional images for gallery view
     category: {
       type: String,
       required: true,

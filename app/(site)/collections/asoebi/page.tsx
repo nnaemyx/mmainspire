@@ -38,6 +38,7 @@ export default async function AsoebiPage() {
     name: item.title,
     tag: "Asoebi",
     image: item.imageUrl,
+    category: "asoebi" as string,
     attribution: "MmaInspire",
   }));
 

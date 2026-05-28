@@ -38,6 +38,7 @@ export default async function WeddingGownsPage() {
     name: item.title,
     tag: "Wedding Gowns",
     image: item.imageUrl,
+    category: "wedding-gowns" as string,
     attribution: "MmaInspire",
   }));
 
