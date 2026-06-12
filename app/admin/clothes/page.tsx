@@ -221,8 +221,8 @@ export default function AdminClothes() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="font-display text-3xl italic text-cream">Manage Clothes</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+        <h1 className="font-display text-2xl md:text-3xl italic text-cream">Manage Clothes</h1>
         <button
           onClick={() => {
             if (showAddForm) {
@@ -243,7 +243,7 @@ export default function AdminClothes() {
             {editingId ? "Edit Clothing Item" : "Add New Item"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <div>
                 <label className="block font-body text-[9px] tracking-[0.4em] uppercase text-muted mb-2">Title</label>
                 <input required type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-transparent border-b border-[rgba(255,255,255,0.18)] focus:border-brand text-cream font-body text-sm py-3 outline-none" />
@@ -354,7 +354,7 @@ export default function AdminClothes() {
       ) : clothes.length === 0 ? (
         <p className="text-muted font-body">No clothes added yet.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {clothes.map((item) => (
             <div key={item._id} className="bg-surface border border-[rgba(255,255,255,0.08)] group">
               <div className="aspect-[3/4] relative overflow-hidden">
@@ -367,7 +367,7 @@ export default function AdminClothes() {
                   </div>
                 )}
                 {/* Actions overlay */}
-                <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-3 right-3 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   <button 
                     onClick={() => handleEdit(item)}
                     className="w-8 h-8 bg-brand text-canvas flex items-center justify-center rounded-full hover:bg-brand/90 transition-colors"
@@ -384,15 +384,15 @@ export default function AdminClothes() {
                   </button>
                 </div>
               </div>
-              <div className="p-5">
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-body text-[8px] tracking-[0.4em] uppercase text-brand">{item.category.replace("-", " ")}</span>
+              <div className="p-3 md:p-5">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
+                  <span className="font-body text-[7px] md:text-[8px] tracking-[0.4em] uppercase text-brand">{item.category.replace("-", " ")}</span>
                   {item.price && (
-                    <span className="font-display text-xs text-brand">₦{item.price.toLocaleString()}</span>
+                    <span className="font-display text-[10px] md:text-xs text-brand">₦{item.price.toLocaleString()}</span>
                   )}
                 </div>
-                <h3 className="font-display text-xl italic text-cream mb-2 truncate">{item.title}</h3>
-                <p className="font-body text-xs text-muted line-clamp-2">{item.description}</p>
+                <h3 className="font-display text-base md:text-xl italic text-cream mb-1 md:mb-2 truncate">{item.title}</h3>
+                <p className="font-body text-[10px] md:text-xs text-muted line-clamp-2">{item.description}</p>
               </div>
             </div>
           ))}

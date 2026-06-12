@@ -97,8 +97,8 @@ export default function AdminSettings() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl italic text-cream mb-8">Site Images</h1>
-      <p className="font-body text-sm text-muted mb-12 max-w-2xl leading-loose tracking-wide">
+      <h1 className="font-display text-2xl md:text-3xl italic text-cream mb-6 md:mb-8">Site Images</h1>
+      <p className="font-body text-xs md:text-sm text-muted mb-8 md:mb-12 max-w-2xl leading-loose tracking-wide">
         Click on any image to replace it. Changes are reflected on the site within 60 seconds. Images are stored on your Cloudinary account.
       </p>
 

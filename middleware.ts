@@ -44,9 +44,28 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Protect customers and orders API routes — all methods require admin
+  if (path.startsWith("/api/customers") || path.startsWith("/api/orders")) {
+    const token = request.cookies.get("admin_token")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const verified = await verifyToken(token);
+    if (!verified) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/clothes/:path*", "/api/enquiries/:path*", "/api/settings/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/api/clothes/:path*",
+    "/api/enquiries/:path*",
+    "/api/settings/:path*",
+    "/api/customers/:path*",
+    "/api/orders/:path*",
+  ],
 };
