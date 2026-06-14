@@ -878,7 +878,7 @@ export default function OrderDetailPage() {
                 <img src={url} alt={`Design ${i + 1}`} className="w-full h-full object-cover" />
                 <button
                   onClick={() => removeDesignImage(url)}
-                  className="absolute top-2 right-2 w-7 h-7 bg-red-500/90 text-white flex items-center justify-center rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 w-7 h-7 bg-red-500/90 text-white flex items-center justify-center rounded-full opacity-90 hover:opacity-100 transition-opacity"
                 >
                   <X size={12} />
                 </button>

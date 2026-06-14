@@ -315,7 +315,7 @@ export default function AdminClothes() {
                       <button
                         type="button"
                         onClick={() => removeImage(preview.id)}
-                        className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500/90 text-white flex items-center justify-center rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200"
+                        className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500/90 text-white flex items-center justify-center rounded-full opacity-90 hover:opacity-100 transition-opacity duration-200"
                       >
                         <X size={12} />
                       </button>
