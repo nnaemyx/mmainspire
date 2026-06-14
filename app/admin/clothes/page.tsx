@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Trash2, Plus, Upload, X, Image as ImageIcon, Pencil } from "lucide-react";
+import { compressImage } from "@/lib/image";
 
 type Clothing = {
   _id: string;
@@ -104,23 +105,46 @@ export default function AdminClothes() {
     setUploadProgress("");
   }
 
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    files.forEach((file, index) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newItem: ImageItem = {
-          id: `new-${Date.now()}-${index}-${Math.random()}`,
-          url: reader.result as string,
-          file,
-          isExisting: false,
-        };
-        setImagePreviews((prev) => [...prev, newItem]);
-      };
-      reader.readAsDataURL(file);
-    });
+    // Process all files with compression first
+    const newItems = await Promise.all(
+      files.map(async (file, index) => {
+        try {
+          const compressed = await compressImage(file);
+          return new Promise<ImageItem>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              resolve({
+                id: `new-${Date.now()}-${index}-${Math.random()}`,
+                url: reader.result as string,
+                file: compressed,
+                isExisting: false,
+              });
+            };
+            reader.readAsDataURL(compressed);
+          });
+        } catch (err) {
+          console.error("Compression error:", err);
+          return new Promise<ImageItem>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              resolve({
+                id: `new-${Date.now()}-${index}-${Math.random()}`,
+                url: reader.result as string,
+                file,
+                isExisting: false,
+              });
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+      })
+    );
+
+    setImagePreviews((prev) => [...prev, ...newItems]);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -165,16 +189,13 @@ export default function AdminClothes() {
     try {
       const newItems = imagePreviews.filter((p) => !p.isExisting && p.file);
 
-      setUploadProgress(
-        newItems.length > 0
-          ? `Uploading ${newItems.length} image${newItems.length > 1 ? "s" : ""}...`
-          : "Saving clothing item..."
-      );
-
-      // Upload new images concurrently
-      const uploadedUrls = await Promise.all(
-        newItems.map((item) => uploadSingleImage(item.file!))
-      );
+      // Upload new images sequentially with clear progress
+      const uploadedUrls: string[] = [];
+      for (let i = 0; i < newItems.length; i++) {
+        setUploadProgress(`Uploading image ${i + 1} of ${newItems.length}...`);
+        const url = await uploadSingleImage(newItems[i].file!);
+        uploadedUrls.push(url);
+      }
 
       // Merge existing and newly uploaded URLs preserving the previews order
       let uploadIdx = 0;

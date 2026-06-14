@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Upload } from "lucide-react";
 import { defaultAssets } from "@/lib/default-assets";
+import { compressImage } from "@/lib/image";
 
 type Asset = {
   key: string;
@@ -47,8 +48,9 @@ export default function AdminSettings() {
     setUploadingKey(activeUploadKey);
 
     try {
+      const compressed = await compressImage(file);
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressed);
       reader.onloadend = async () => {
         const base64Image = reader.result;
 

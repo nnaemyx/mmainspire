@@ -16,6 +16,7 @@ import {
   CreditCard,
   Image as ImageIcon,
 } from "lucide-react";
+import { compressImage } from "@/lib/image";
 
 type OrderItem = {
   description: string;
@@ -245,9 +246,10 @@ export default function OrderDetailPage() {
 
     setUploadingDesign(true);
     try {
+      const compressed = await compressImage(file);
       // Upload to Cloudinary
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressed);
       reader.onloadend = async () => {
         const uploadRes = await fetch("/api/upload", {
           method: "POST",
