@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import connectToDatabase from "@/lib/db";
 import Order from "@/lib/models/Order";
 import Admin from "@/lib/models/Admin";
+import Customer from "@/lib/models/Customer";
 import { verifyToken } from "@/lib/auth";
 
 export async function GET(

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/db";
 import Order from "@/lib/models/Order";
+import Customer from "@/lib/models/Customer";
 
 export async function POST(
   req: Request,
