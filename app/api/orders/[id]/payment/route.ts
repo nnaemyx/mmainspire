@@ -9,6 +9,8 @@ export async function POST(
 ) {
   try {
     await connectToDatabase();
+    // Prevent tree-shaking
+    if (!Customer) console.warn("Customer schema check failed");
     const { id } = await params;
     const { amount, note } = await req.json();
 

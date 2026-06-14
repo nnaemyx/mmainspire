@@ -23,6 +23,9 @@ export async function GET() {
 
     await connectToDatabase();
     
+    // Explicitly reference Customer model to prevent bundler tree-shaking
+    if (!Customer) console.warn("Customer model registration check failed");
+    
     // Fetch all orders
     const orders = await Order.find({}).populate("customer", "name");
 

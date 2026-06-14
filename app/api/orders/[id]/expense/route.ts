@@ -12,6 +12,10 @@ export async function POST(
 ) {
   try {
     await connectToDatabase();
+    
+    // Prevent tree-shaking
+    if (!Customer || !Admin) console.warn("Mongoose models verification check failed");
+    
     const cookieStore = await cookies();
     const token = cookieStore.get("admin_token")?.value;
     const verified = token ? await verifyToken(token) : null;
@@ -56,6 +60,10 @@ export async function DELETE(
 ) {
   try {
     await connectToDatabase();
+    
+    // Prevent tree-shaking
+    if (!Customer || !Admin) console.warn("Mongoose models verification check failed");
+    
     const cookieStore = await cookies();
     const token = cookieStore.get("admin_token")?.value;
     const verified = token ? await verifyToken(token) : null;
