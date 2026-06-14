@@ -52,6 +52,8 @@ type OrderData = {
   designImages: string[];
   status: string;
   notes?: string;
+  assignedTo?: { _id: string; name: string; email: string } | string;
+  expenses?: { _id: string; amount: number; date: string; description: string }[];
 };
 
 const STATUS_OPTIONS = ["Pending", "In Progress", "Ready", "Delivered"];
@@ -75,12 +77,38 @@ export default function OrderDetailPage() {
   const [status, setStatus] = useState("Pending");
   const [collectionDate, setCollectionDate] = useState("");
   const [notes, setNotes] = useState("");
+  const [assignedTo, setAssignedTo] = useState("");
+  const [userRole, setUserRole] = useState("admin");
+  const [admins, setAdmins] = useState<{ _id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.user) {
+          setUserRole(data.user.role);
+          if (data.user.role === "superadmin") {
+            fetch("/api/admins")
+              .then((res) => res.json())
+              .then((adminsData) => setAdmins(adminsData))
+              .catch((err) => console.error(err));
+          }
+        }
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   // Payment form
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentNote, setPaymentNote] = useState("");
   const [addingPayment, setAddingPayment] = useState(false);
+
+  // Expense form
+  const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [expenseAmount, setExpenseAmount] = useState("");
+  const [expenseDescription, setExpenseDescription] = useState("");
+  const [addingExpense, setAddingExpense] = useState(false);
 
   // Design upload
   const designInputRef = useRef<HTMLInputElement>(null);
@@ -99,6 +127,7 @@ export default function OrderDetailPage() {
       setStatus(data.status);
       setCollectionDate(data.collectionDate ? data.collectionDate.split("T")[0] : "");
       setNotes(data.notes || "");
+      setAssignedTo(data.assignedTo?._id || data.assignedTo || "");
     } catch (err) {
       console.error(err);
     } finally {
@@ -123,6 +152,7 @@ export default function OrderDetailPage() {
           status,
           collectionDate: collectionDate || undefined,
           notes,
+          assignedTo: assignedTo || null,
         }),
       });
       if (!res.ok) throw new Error("Failed to save");
@@ -162,6 +192,50 @@ export default function OrderDetailPage() {
       alert("Failed to add payment.");
     } finally {
       setAddingPayment(false);
+    }
+  }
+
+  async function addExpense(e: React.FormEvent) {
+    e.preventDefault();
+    if (!expenseAmount || Number(expenseAmount) <= 0 || !expenseDescription) return;
+
+    setAddingExpense(true);
+    try {
+      const res = await fetch(`/api/orders/${id}/expense`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: Number(expenseAmount),
+          description: expenseDescription,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to add expense");
+      const updated = await res.json();
+      setOrder(updated);
+      setExpenseAmount("");
+      setExpenseDescription("");
+      setShowExpenseForm(false);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add expense.");
+    } finally {
+      setAddingExpense(false);
+    }
+  }
+
+  async function deleteExpense(expenseId: string) {
+    if (!confirm("Are you sure you want to delete this expense?")) return;
+
+    try {
+      const res = await fetch(`/api/orders/${id}/expense?expenseId=${expenseId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete expense");
+      const updated = await res.json();
+      setOrder(updated);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete expense.");
     }
   }
 
@@ -265,7 +339,7 @@ export default function OrderDetailPage() {
     if (!order?.customer?.phone) return "#";
     const phone = order.customer.phone.replace(/^0/, "234").replace(/\D/g, "");
     const invoiceUrl = `${window.location.origin}/admin/orders/${order._id}/invoice`;
-    const message = `Hi ${order.customer.name}, here is your invoice (INV-${order.invoiceNumber}) from Mma Inspire Fashion Allure.\n\nTotal: ₦${order.total.toLocaleString()}\nAdvance Paid: ₦${order.advance.toLocaleString()}\nBalance: ₦${order.balance.toLocaleString()}\n\nView your invoice: ${invoiceUrl}`;
+    const message = `Hi ${order.customer.name}, here is your invoice (INV-${order.invoiceNumber}) from Mma Inspire Fashion Allure.\n\nTotal: ₦ ${(order.total ?? 0).toLocaleString()}\nAdvance Paid: ₦ ${(order.advance ?? 0).toLocaleString()}\nBalance: ₦ ${(order.balance ?? 0).toLocaleString()}\n\nView your invoice: ${invoiceUrl}`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   }
 
@@ -341,7 +415,7 @@ export default function OrderDetailPage() {
 
       {/* Status & Date Controls */}
       <div className="bg-surface border border-[rgba(255,255,255,0.08)] p-5 md:p-7 mb-5">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
           <div>
             <label className="block font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-2">
               Status
@@ -380,6 +454,32 @@ export default function OrderDetailPage() {
               placeholder="e.g. Rush order"
               className="w-full bg-surface2 border border-[rgba(255,255,255,0.08)] text-cream font-body text-sm py-2.5 px-3 outline-none focus:border-brand"
             />
+          </div>
+          <div>
+            <label className="block font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-2">
+              Assigned To
+            </label>
+            {userRole === "superadmin" ? (
+              <select
+                value={assignedTo}
+                onChange={(e) => setAssignedTo(e.target.value)}
+                className="w-full bg-surface2 border border-[rgba(255,255,255,0.08)] text-cream font-body text-sm py-2.5 px-3 outline-none focus:border-brand"
+              >
+                <option value="">Unassigned</option>
+                {admins.map((a) => (
+                  <option key={a._id} value={a._id}>
+                    {a.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="text"
+                readOnly
+                value={order.assignedTo && typeof order.assignedTo === "object" ? order.assignedTo.name : "Unassigned"}
+                className="w-full bg-surface2/50 border border-[rgba(255,255,255,0.04)] text-muted font-body text-sm py-2.5 px-3 outline-none"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -531,16 +631,16 @@ export default function OrderDetailPage() {
         <div className="grid grid-cols-3 gap-3 mb-5">
           <div className="bg-surface2 p-4 text-center">
             <p className="font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-1">Total</p>
-            <p className="font-display text-lg text-cream">₦{order.total.toLocaleString()}</p>
+            <p className="font-display text-lg text-cream">₦{(order.total ?? 0).toLocaleString()}</p>
           </div>
           <div className="bg-surface2 p-4 text-center">
             <p className="font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-1">Advance</p>
-            <p className="font-display text-lg text-brand">₦{order.advance.toLocaleString()}</p>
+            <p className="font-display text-lg text-brand">₦{(order.advance ?? 0).toLocaleString()}</p>
           </div>
           <div className="bg-surface2 p-4 text-center">
             <p className="font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-1">Balance</p>
-            <p className={`font-display text-lg ${order.balance > 0 ? "text-red-400" : "text-brand"}`}>
-              ₦{order.balance.toLocaleString()}
+            <p className={`font-display text-lg ${(order.balance ?? 0) > 0 ? "text-red-400" : "text-brand"}`}>
+              ₦{(order.balance ?? 0).toLocaleString()}
             </p>
           </div>
         </div>
@@ -587,12 +687,12 @@ export default function OrderDetailPage() {
         )}
 
         {/* Payment History */}
-        {order.payments.length > 0 && (
+        {(order.payments || []).length > 0 && (
           <div className="space-y-2">
             <h3 className="font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-2">
               Payment History
             </h3>
-            {order.payments.map((payment, i) => (
+            {(order.payments || []).map((payment, i) => (
               <div
                 key={payment._id || i}
                 className="flex items-center justify-between py-2 border-b border-[rgba(255,255,255,0.04)]"
@@ -618,6 +718,123 @@ export default function OrderDetailPage() {
         )}
       </div>
 
+      {/* ── Expenses Section ── */}
+      <div className="bg-surface border border-[rgba(255,255,255,0.08)] p-5 md:p-7 mb-5">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="font-display text-lg italic text-cream">Expenses</h2>
+          <button
+            onClick={() => setShowExpenseForm(!showExpenseForm)}
+            className="flex items-center gap-1.5 font-body text-[9px] tracking-[0.3em] uppercase text-brand hover:text-brand/80 transition-colors"
+          >
+            {showExpenseForm ? (
+              <>
+                <X size={13} /> Cancel
+              </>
+            ) : (
+              <>
+                <CreditCard size={13} /> Record Expense
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Expenses Summary */}
+        <div className="grid grid-cols-2 gap-3 mb-5">
+          <div className="bg-surface2 p-4 text-center">
+            <p className="font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-1">Order Revenue</p>
+            <p className="font-display text-lg text-cream">₦{(order.total ?? 0).toLocaleString()}</p>
+          </div>
+          <div className="bg-surface2 p-4 text-center">
+            <p className="font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-1">Total Expenses</p>
+            <p className="font-display text-lg text-red-400">
+              ₦{(order.expenses || []).reduce((sum, e) => sum + e.amount, 0).toLocaleString()}
+            </p>
+          </div>
+        </div>
+
+        {/* Add Expense Form */}
+        {showExpenseForm && (
+          <form onSubmit={addExpense} className="bg-surface2 p-5 mb-5 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-1.5">
+                  Expense Amount (₦) *
+                </label>
+                <input
+                  required
+                  type="number"
+                  min="1"
+                  value={expenseAmount}
+                  onChange={(e) => setExpenseAmount(e.target.value)}
+                  placeholder="e.g. 5000"
+                  className="w-full bg-transparent border-b border-[rgba(255,255,255,0.18)] focus:border-brand text-cream font-body text-sm py-2 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-1.5">
+                  Description *
+                </label>
+                <input
+                  required
+                  type="text"
+                  value={expenseDescription}
+                  onChange={(e) => setExpenseDescription(e.target.value)}
+                  placeholder="e.g. Sewing thread, zip, transport"
+                  className="w-full bg-transparent border-b border-[rgba(255,255,255,0.18)] focus:border-brand text-cream font-body text-sm py-2 outline-none"
+                />
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={addingExpense}
+              className="font-body text-[10px] tracking-[0.3em] uppercase px-6 py-3 bg-brand text-canvas hover:bg-brand/85 transition-all disabled:opacity-50"
+            >
+              {addingExpense ? "Recording..." : "Record Expense"}
+            </button>
+          </form>
+        )}
+
+        {/* Expense History */}
+        {(order.expenses || []).length > 0 ? (
+          <div className="space-y-2">
+            <h3 className="font-body text-[8px] tracking-[0.4em] uppercase text-muted mb-2">
+              Expense List
+            </h3>
+            {order.expenses?.map((expense) => (
+              <div
+                key={expense._id}
+                className="flex items-center justify-between py-2 border-b border-[rgba(255,255,255,0.04)]"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-body text-xs text-muted">
+                    {new Date(expense.date).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <span className="font-body text-xs text-cream">{expense.description}</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="font-display text-sm text-red-400">
+                    -₦{expense.amount.toLocaleString()}
+                  </span>
+                  <button
+                    onClick={() => deleteExpense(expense._id)}
+                    className="text-red-500/60 hover:text-red-500 transition-colors p-1 cursor-pointer"
+                    title="Delete Expense"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="font-body text-xs text-muted italic">No expenses recorded yet for this order.</p>
+        )}
+      </div>
+
       {/* ── Design Illustrations ── */}
       <div className="bg-surface border border-[rgba(255,255,255,0.08)] p-5 md:p-7">
         <div className="flex items-center justify-between mb-5">
@@ -640,7 +857,7 @@ export default function OrderDetailPage() {
           className="hidden"
         />
 
-        {order.designImages.length === 0 ? (
+        {(order.designImages || []).length === 0 ? (
           <div
             onClick={() => designInputRef.current?.click()}
             className="w-full h-40 border-2 border-dashed border-[rgba(255,255,255,0.12)] hover:border-brand flex items-center justify-center cursor-pointer transition-colors"
@@ -654,7 +871,7 @@ export default function OrderDetailPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {order.designImages.map((url, i) => (
+            {(order.designImages || []).map((url, i) => (
               <div key={i} className="relative group aspect-square bg-surface2 overflow-hidden border border-[rgba(255,255,255,0.06)]">
                 <img src={url} alt={`Design ${i + 1}`} className="w-full h-full object-cover" />
                 <button

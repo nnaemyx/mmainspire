@@ -103,7 +103,7 @@ export default function InvoicePage() {
   function shareOnWhatsApp() {
     if (!order?.customer?.phone) return;
     const phone = order.customer.phone.replace(/^0/, "234").replace(/\D/g, "");
-    const message = `Hi ${order.customer.name}, here is your invoice (INV-${order.invoiceNumber}) from Mma Inspire Fashion Allure.\n\nTotal: ₦${order.total.toLocaleString()}\nAdvance Paid: ₦${order.advance.toLocaleString()}\nBalance: ₦${order.balance.toLocaleString()}${order.collectionDate ? `\nCollection Date: ${new Date(order.collectionDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}` : ""}\n\nThank you for choosing Mma Inspire! 🙏`;
+    const message = `Hi ${order.customer.name}, here is your invoice (INV-${order.invoiceNumber}) from Mma Inspire Fashion Allure.\n\nTotal: ₦${(order.total ?? 0).toLocaleString()}\nAdvance Paid: ₦${(order.advance ?? 0).toLocaleString()}\nBalance: ₦${(order.balance ?? 0).toLocaleString()}${order.collectionDate ? `\nCollection Date: ${new Date(order.collectionDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}` : ""}\n\nThank you for choosing Mma Inspire! 🙏`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
   }
 
@@ -172,7 +172,7 @@ export default function InvoicePage() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center justify-center bg-[#113e1f] p-2 rounded-full w-16 h-16 shrink-0 border border-[#c5a059]/30 shadow-inner">
                   <img
-                    src="https://res.cloudinary.com/mmainspire/image/upload/v1698277749/mmainspire/eralwmthytkztkwamzfs.png"
+                    src="/logo.png"
                     alt="MmaInspire Logo"
                     className="w-12 h-12 object-contain"
                     crossOrigin="anonymous"
@@ -319,20 +319,20 @@ export default function InvoicePage() {
                   <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
                     Total
                   </span>
-                  <span className="font-bold text-base text-gray-900 font-mono">₦{order.total.toLocaleString()}</span>
+                  <span className="font-bold text-base text-gray-900 font-mono">₦{(order.total ?? 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center pb-2 border-b border-gray-200">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
                     Advance
                   </span>
-                  <span className="font-bold text-base text-[#113e1f] font-mono">₦{order.advance.toLocaleString()}</span>
+                  <span className="font-bold text-base text-[#113e1f] font-mono">₦{(order.advance ?? 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
                     Balance Due
                   </span>
-                  <span className={`font-bold text-base font-mono ${order.balance > 0 ? "text-red-600" : "text-[#113e1f]"}`}>
-                    ₦{order.balance.toLocaleString()}
+                  <span className={`font-bold text-base font-mono ${(order.balance ?? 0) > 0 ? "text-red-600" : "text-[#113e1f]"}`}>
+                    ₦{(order.balance ?? 0).toLocaleString()}
                   </span>
                 </div>
               </div>

@@ -44,9 +44,14 @@ export default function AdminClothes() {
     try {
       const res = await fetch("/api/clothes");
       const data = await res.json();
-      setClothes(data);
+      if (Array.isArray(data)) {
+        setClothes(data);
+      } else {
+        setClothes([]);
+      }
     } catch (err) {
       console.error(err);
+      setClothes([]);
     } finally {
       setLoading(false);
     }
@@ -367,7 +372,7 @@ export default function AdminClothes() {
                   </div>
                 )}
                 {/* Actions overlay */}
-                <div className="absolute top-3 right-3 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-3 right-3 flex gap-2 opacity-100 transition-opacity">
                   <button 
                     onClick={() => handleEdit(item)}
                     className="w-8 h-8 bg-brand text-canvas flex items-center justify-center rounded-full hover:bg-brand/90 transition-colors"

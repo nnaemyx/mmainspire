@@ -1,17 +1,36 @@
 import { NextResponse } from "next/server";
 import { signToken } from "@/lib/auth";
+import connectToDatabase from "@/lib/db";
+import Admin from "@/lib/models/Admin";
+import { hashPassword } from "@/lib/crypto";
 
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
+    const normalizedEmail = email ? email.toLowerCase().trim() : "";
 
     const adminEmail = process.env.ADMIN_EMAIL || "admin@mmainspire.com";
     const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
 
-    if (email === adminEmail && password === adminPassword) {
-      const token = await signToken({ role: "admin", email });
+    let payload: any = null;
 
-      const response = NextResponse.json({ success: true });
+    if (normalizedEmail === adminEmail.toLowerCase().trim() && password === adminPassword) {
+      payload = { role: "superadmin", email: normalizedEmail, name: "Super Admin", permissions: ["clothes", "customers", "orders"] };
+    } else {
+      await connectToDatabase();
+      const admin = await Admin.findOne({ email: normalizedEmail });
+      if (admin && admin.password === hashPassword(password)) {
+        const perms = admin.permissions && admin.permissions.length > 0
+          ? Array.from(admin.permissions)
+          : ["orders"];
+        payload = { role: "admin", email: normalizedEmail, id: admin._id.toString(), name: admin.name, permissions: perms };
+      }
+    }
+
+    if (payload) {
+      const token = await signToken(payload);
+
+      const response = NextResponse.json({ success: true, user: payload });
       response.cookies.set({
         name: "admin_token",
         value: token,
@@ -26,6 +45,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
   } catch (error) {
+    console.error("Login error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

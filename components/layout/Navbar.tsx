@@ -79,7 +79,7 @@ export default function Navbar() {
           {/* Logo — center */}
           <Link href="/" className="flex items-center gap-3 group" aria-label="MmaInspire Home">
             <Image
-              src="https://res.cloudinary.com/mmainspire/image/upload/v1698277749/mmainspire/eralwmthytkztkwamzfs.png"
+              src="/logo.png"
               alt="MmaInspire Logo"
               width={44}
               height={44}
@@ -146,7 +146,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between p-6 border-b border-[rgba(255,255,255,0.07)]">
           <Link href="/" onClick={() => setMobileOpen(false)}>
             <Image
-              src="https://res.cloudinary.com/mmainspire/image/upload/v1698277749/mmainspire/eralwmthytkztkwamzfs.png"
+              src="/logo.png"
               alt="MmaInspire"
               width={40}
               height={40}

@@ -12,47 +12,91 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
 
-    // Since we are in Edge runtime, we use jose which supports Edge
     const verified = await verifyToken(token);
     if (!verified) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-  }
 
-  // Also protect API routes related to admin tasks
-  if (path.startsWith("/api/clothes") && request.method !== "GET") {
-    const token = request.cookies.get("admin_token")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
+    // Restrict regular admin role based on permissions
+    if (verified.role === "admin" && verified.id) {
+      const permissions: string[] = (verified.permissions as string[]) && (verified.permissions as string[]).length > 0
+        ? (verified.permissions as string[])
+        : ["orders"];
+      let isAllowed = false;
 
-  if (path.startsWith("/api/enquiries") && request.method === "GET") {
-    const token = request.cookies.get("admin_token")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
+      if (permissions.includes("clothes") && (path === "/admin/clothes" || path.startsWith("/admin/clothes/"))) {
+        isAllowed = true;
+      }
+      if (permissions.includes("customers") && (path === "/admin/customers" || path.startsWith("/admin/customers/"))) {
+        isAllowed = true;
+      }
+      if (permissions.includes("orders") && (path === "/admin/orders" || path.startsWith("/admin/orders/"))) {
+        isAllowed = true;
+      }
 
-  if (path.startsWith("/api/settings")) {
-    const token = request.cookies.get("admin_token")?.value;
-    if (!token) {
-      // In this specific site, assets are read publicly via server components or fetch GET
-      if (request.method !== "GET") {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      if (!isAllowed) {
+        if (permissions.includes("clothes")) {
+          return NextResponse.redirect(new URL("/admin/clothes", request.url));
+        } else if (permissions.includes("customers")) {
+          return NextResponse.redirect(new URL("/admin/customers", request.url));
+        } else if (permissions.includes("orders")) {
+          return NextResponse.redirect(new URL("/admin/orders", request.url));
+        } else {
+          return NextResponse.redirect(new URL("/admin/login", request.url));
+        }
       }
     }
   }
 
-  // Protect customers and orders API routes — all methods require admin
-  if (path.startsWith("/api/customers") || path.startsWith("/api/orders")) {
+  // Protect and restrict API routes
+  const isAdminApi =
+    path.startsWith("/api/clothes") ||
+    path.startsWith("/api/enquiries") ||
+    path.startsWith("/api/settings") ||
+    path.startsWith("/api/customers") ||
+    path.startsWith("/api/orders") ||
+    path.startsWith("/api/admins") ||
+    path.startsWith("/api/reports");
+
+  if (isAdminApi) {
     const token = request.cookies.get("admin_token")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const verified = await verifyToken(token);
-    if (!verified) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    
+    // Some routes allow public GET access
+    const isPublicGet =
+      (path.startsWith("/api/clothes") && request.method === "GET") ||
+      (path.startsWith("/api/settings") && request.method === "GET");
+
+    if (!isPublicGet) {
+      if (!token) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+
+      const verified = await verifyToken(token);
+      if (!verified) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+
+      // Restrict regular admins from sensitive endpoints based on permissions
+      if (verified.role === "admin") {
+        const permissions: string[] = (verified.permissions as string[]) && (verified.permissions as string[]).length > 0
+          ? (verified.permissions as string[])
+          : ["orders"];
+        let isAllowedApi = false;
+
+        if (permissions.includes("clothes") && path.startsWith("/api/clothes")) {
+          isAllowedApi = true;
+        }
+        if (permissions.includes("customers") && path.startsWith("/api/customers")) {
+          isAllowedApi = true;
+        }
+        if (permissions.includes("orders") && path.startsWith("/api/orders")) {
+          isAllowedApi = true;
+        }
+
+        if (!isAllowedApi && path !== "/api/auth/me") {
+          return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+      }
     }
   }
 
@@ -67,5 +111,7 @@ export const config = {
     "/api/settings/:path*",
     "/api/customers/:path*",
     "/api/orders/:path*",
+    "/api/admins/:path*",
+    "/api/reports/:path*",
   ],
 };

@@ -2,10 +2,19 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/db";
 import Order from "@/lib/models/Order";
 import Customer from "@/lib/models/Customer";
+import Admin from "@/lib/models/Admin";
+
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth";
 
 export async function GET(req: Request) {
   try {
     await connectToDatabase();
+    
+    const cookieStore = await cookies();
+    const token = cookieStore.get("admin_token")?.value;
+    const verified = token ? await verifyToken(token) : null;
+
     const { searchParams } = new URL(req.url);
     const customerId = searchParams.get("customer");
     const status = searchParams.get("status");
@@ -16,8 +25,11 @@ export async function GET(req: Request) {
     if (customerId) query.customer = customerId;
     if (status) query.status = status;
 
+    // No order-level filtering by assignedTo; if the admin has the "orders" permission, they can view all orders.
+
     let orders = await Order.find(query)
       .populate("customer", "name phone")
+      .populate("assignedTo", "name email")
       .sort({ createdAt: -1 });
 
     // Client-side-like search on populated fields
@@ -32,7 +44,8 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json(orders);
-  } catch (error) {
+  } catch (error: any) {
+    console.error("GET orders error:", error);
     return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Trash2 } from "lucide-react";
 
 type Enquiry = {
   _id: string;
@@ -25,12 +26,32 @@ export default function AdminEnquiries() {
   async function fetchEnquiries() {
     try {
       const res = await fetch("/api/enquiries");
-      const data = await res.json();
-      setEnquiries(data);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setEnquiries(data);
+        } else {
+          setEnquiries([]);
+        }
+      }
     } catch (err) {
       console.error(err);
+      setEnquiries([]);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Are you sure you want to delete this enquiry?")) return;
+
+    try {
+      const res = await fetch(`/api/enquiries/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete enquiry");
+      setEnquiries((prev) => prev.filter((e) => e._id !== id));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete enquiry.");
     }
   }
 
@@ -62,11 +83,20 @@ export default function AdminEnquiries() {
                       })}
                     </p>
                   </div>
-                  {enquiry.collection && (
-                    <span className="font-body text-[8px] tracking-[0.3em] uppercase text-brand bg-brand/10 px-2.5 py-1 capitalize">
-                      {enquiry.collection.replace("-", " ")}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {enquiry.collection && (
+                      <span className="font-body text-[8px] tracking-[0.3em] uppercase text-brand bg-brand/10 px-2.5 py-1 capitalize">
+                        {enquiry.collection.replace("-", " ")}
+                      </span>
+                    )}
+                    <button
+                      onClick={() => handleDelete(enquiry._id)}
+                      className="w-8 h-8 rounded-full border border-red-500/20 hover:bg-red-500/10 text-red-400/80 hover:text-red-400 flex items-center justify-center transition-all cursor-pointer"
+                      title="Delete Enquiry"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-2 mb-3">
@@ -103,6 +133,7 @@ export default function AdminEnquiries() {
                   <th className="p-4 font-normal text-muted uppercase tracking-widest text-[9px]">Contact</th>
                   <th className="p-4 font-normal text-muted uppercase tracking-widest text-[9px]">Collection</th>
                   <th className="p-4 font-normal text-muted uppercase tracking-widest text-[9px]">Message</th>
+                  <th className="p-4 font-normal text-muted uppercase tracking-widest text-[9px]">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,6 +149,15 @@ export default function AdminEnquiries() {
                     </td>
                     <td className="p-4 capitalize">{enquiry.collection ? enquiry.collection.replace("-", " ") : "N/A"}</td>
                     <td className="p-4 max-w-xs truncate" title={enquiry.message}>{enquiry.message}</td>
+                    <td className="p-4">
+                      <button
+                        onClick={() => handleDelete(enquiry._id)}
+                        className="w-8 h-8 rounded-full border border-red-500/20 hover:bg-red-500/10 text-red-400/80 hover:text-red-400 flex items-center justify-center transition-all cursor-pointer"
+                        title="Delete Enquiry"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -10,7 +10,7 @@ type Customer = {
   phone: string;
   email?: string;
   address?: string;
-  measurements?: Record<string, number | undefined>;
+  measurements?: Record<string, string | number | undefined>;
   notes?: string;
   createdAt: string;
 };
@@ -44,9 +44,14 @@ export default function AdminCustomers() {
     try {
       const res = await fetch("/api/customers");
       const data = await res.json();
-      setCustomers(data);
+      if (Array.isArray(data)) {
+        setCustomers(data);
+      } else {
+        setCustomers([]);
+      }
     } catch (err) {
       console.error(err);
+      setCustomers([]);
     } finally {
       setLoading(false);
     }
@@ -57,9 +62,14 @@ export default function AdminCustomers() {
     try {
       const res = await fetch(`/api/customers?search=${encodeURIComponent(search)}`);
       const data = await res.json();
-      setCustomers(data);
+      if (Array.isArray(data)) {
+        setCustomers(data);
+      } else {
+        setCustomers([]);
+      }
     } catch (err) {
       console.error(err);
+      setCustomers([]);
     } finally {
       setLoading(false);
     }
@@ -92,9 +102,9 @@ export default function AdminCustomers() {
     }
   }
 
-  function getMeasurementCount(m?: Record<string, number | undefined>) {
+  function getMeasurementCount(m?: Record<string, string | number | undefined>) {
     if (!m) return 0;
-    return MEASUREMENT_KEYS.filter((k) => m[k] !== undefined && m[k] !== null).length;
+    return MEASUREMENT_KEYS.filter((k) => m[k] !== undefined && m[k] !== null && m[k] !== "").length;
   }
 
   return (

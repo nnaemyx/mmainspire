@@ -18,7 +18,7 @@ import {
   Send,
 } from "lucide-react";
 
-type Measurements = Record<string, number | undefined>;
+type Measurements = Record<string, string | number | undefined>;
 
 type Customer = {
   _id: string;
@@ -182,7 +182,7 @@ export default function CustomerDetailPage() {
   function updateMeasurement(key: string, value: string) {
     setMeasurements((prev) => ({
       ...prev,
-      [key]: value === "" ? undefined : Number(value),
+      [key]: value === "" ? undefined : value,
     }));
   }
 
@@ -405,8 +405,7 @@ export default function CustomerDetailPage() {
                       {field.label}
                     </label>
                     <input
-                      type="number"
-                      step="0.5"
+                      type="text"
                       value={measurements[field.key] ?? ""}
                       onChange={(e) => updateMeasurement(field.key, e.target.value)}
                       placeholder="—"
@@ -470,11 +469,11 @@ export default function CustomerDetailPage() {
                   </span>
                   <div className="flex items-center gap-4">
                     <span className="font-display text-sm text-cream">
-                      ₦{order.total.toLocaleString()}
+                      ₦{(order.total ?? 0).toLocaleString()}
                     </span>
-                    {order.balance > 0 && (
+                    {(order.balance ?? 0) > 0 && (
                       <span className="font-body text-[10px] text-red-400">
-                        Bal: ₦{order.balance.toLocaleString()}
+                        Bal: ₦{(order.balance ?? 0).toLocaleString()}
                       </span>
                     )}
                   </div>

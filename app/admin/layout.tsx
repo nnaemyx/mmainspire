@@ -14,20 +14,52 @@ import {
   X,
   Users,
   ClipboardList,
+  BarChart3,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [role, setRole] = useState<string>("admin");
+  const [userName, setUserName] = useState<string>("");
+  const [permissions, setPermissions] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Close sidebar on route change
   useEffect(() => {
     setSidebarOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (pathname === "/admin/login") {
+      setLoading(false);
+      return;
+    }
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.user) {
+          setRole(data.user.role);
+          setUserName(data.user.name);
+          setPermissions(data.user.permissions && data.user.permissions.length > 0 ? data.user.permissions : ["orders"]);
+        }
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, [pathname]);
+
   if (pathname === "/admin/login") {
     return <>{children}</>;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-canvas flex flex-col items-center justify-center gap-4 text-cream font-body">
+        <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs tracking-wider uppercase text-muted">Verifying Session...</span>
+      </div>
+    );
   }
 
   const handleLogout = async () => {
@@ -36,14 +68,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.refresh();
   };
 
-  const navItems = [
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { name: "Customers", href: "/admin/customers", icon: Users },
-    { name: "Orders", href: "/admin/orders", icon: ClipboardList },
-    { name: "Clothes", href: "/admin/clothes", icon: ShoppingBag },
-    { name: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
-    { name: "Site Images", href: "/admin/settings", icon: ImageIcon },
-  ];
+  const navItems = role === "superadmin"
+    ? [
+        { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+        { name: "Admins", href: "/admin/admins", icon: Users },
+        { name: "Reports", href: "/admin/reports", icon: BarChart3 },
+        { name: "Customers", href: "/admin/customers", icon: Users },
+        { name: "Orders", href: "/admin/orders", icon: ClipboardList },
+        { name: "Clothes", href: "/admin/clothes", icon: ShoppingBag },
+        { name: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
+        { name: "Site Images", href: "/admin/settings", icon: ImageIcon },
+      ]
+    : [
+        ...(permissions.includes("customers") ? [{ name: "Customers", href: "/admin/customers", icon: Users }] : []),
+        ...(permissions.includes("orders") ? [{ name: "My Orders", href: "/admin/orders", icon: ClipboardList }] : []),
+        ...(permissions.includes("clothes") ? [{ name: "Clothes", href: "/admin/clothes", icon: ShoppingBag }] : []),
+      ];
 
   return (
     <div className="min-h-screen bg-canvas flex flex-col lg:flex-row">
@@ -119,6 +159,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         <div className="mt-auto p-4 lg:p-6 border-t border-[rgba(255,255,255,0.08)] space-y-1">
+          {userName && (
+            <div className="px-4 py-2.5 mb-2.5 flex items-center gap-3 border-b border-[rgba(255,255,255,0.04)] pb-3.5">
+              <div className="w-8 h-8 rounded-full bg-brand/20 border border-brand/40 text-brand flex items-center justify-center font-display font-bold text-xs uppercase italic shrink-0">
+                {userName[0]}
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="font-body text-xs font-semibold text-cream truncate">{userName}</span>
+                <span className="font-body text-[9px] tracking-wider uppercase text-muted capitalize">{role}</span>
+              </div>
+            </div>
+          )}
           <Link
             href="/"
             target="_blank"

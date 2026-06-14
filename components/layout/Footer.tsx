@@ -23,7 +23,7 @@ export default function Footer() {
         <div>
           <Link href="/" className="inline-block mb-5">
             <Image
-              src="https://res.cloudinary.com/mmainspire/image/upload/v1698277749/mmainspire/eralwmthytkztkwamzfs.png"
+              src="/logo.png"
               alt="MmaInspire"
               width={52}
               height={52}

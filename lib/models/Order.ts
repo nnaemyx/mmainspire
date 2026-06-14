@@ -19,6 +19,15 @@ const PaymentSchema = new mongoose.Schema(
   { _id: true }
 );
 
+const ExpenseSchema = new mongoose.Schema(
+  {
+    amount: { type: Number, required: true },
+    date: { type: Date, default: Date.now },
+    description: { type: String, required: true },
+  },
+  { _id: true }
+);
+
 const OrderSchema = new mongoose.Schema(
   {
     invoiceNumber: { type: String, unique: true },
@@ -31,6 +40,7 @@ const OrderSchema = new mongoose.Schema(
     items: { type: [OrderItemSchema], default: [] },
     total: { type: Number, default: 0 },
     payments: { type: [PaymentSchema], default: [] },
+    expenses: { type: [ExpenseSchema], default: [] },
     advance: { type: Number, default: 0 },
     balance: { type: Number, default: 0 },
     collectionDate: { type: Date },
@@ -39,6 +49,11 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       default: "Pending",
       enum: ["Pending", "In Progress", "Ready", "Delivered"],
+    },
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: false,
     },
     notes: { type: String },
   },
@@ -67,4 +82,7 @@ OrderSchema.pre("save", async function () {
   this.balance = this.total - this.advance;
 });
 
+if (mongoose.models && mongoose.models.Order) {
+  delete mongoose.models.Order;
+}
 export default mongoose.models.Order || mongoose.model("Order", OrderSchema);

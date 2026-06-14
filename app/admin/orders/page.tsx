@@ -65,9 +65,14 @@ function OrdersContent() {
 
       const res = await fetch(`/api/orders?${params.toString()}`);
       const data = await res.json();
-      setOrders(data);
+      if (Array.isArray(data)) {
+        setOrders(data);
+      } else {
+        setOrders([]);
+      }
     } catch (err) {
       console.error(err);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
@@ -77,9 +82,14 @@ function OrdersContent() {
     try {
       const res = await fetch(`/api/customers?search=${encodeURIComponent(customerSearch)}`);
       const data = await res.json();
-      setCustomers(data);
+      if (Array.isArray(data)) {
+        setCustomers(data);
+      } else {
+        setCustomers([]);
+      }
     } catch (err) {
       console.error(err);
+      setCustomers([]);
     }
   }
 
@@ -273,11 +283,11 @@ function OrdersContent() {
                     })}
                   </span>
                   <span className="font-display text-sm text-cream">
-                    ₦{order.total.toLocaleString()}
+                    ₦{(order.total ?? 0).toLocaleString()}
                   </span>
-                  {order.balance > 0 && (
+                  {(order.balance ?? 0) > 0 && (
                     <span className="font-body text-[10px] text-red-400">
-                      Bal: ₦{order.balance.toLocaleString()}
+                      Bal: ₦{(order.balance ?? 0).toLocaleString()}
                     </span>
                   )}
                 </div>

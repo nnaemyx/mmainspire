@@ -2,25 +2,25 @@ import mongoose from "mongoose";
 
 const MeasurementsSchema = new mongoose.Schema(
   {
-    bust: { type: Number },
-    roundUnderBust: { type: Number },
-    waist: { type: Number },
-    shoulderToUnderBust: { type: Number },
-    halfLength: { type: Number },
-    bustPoint: { type: Number },
-    shoulder: { type: Number },
-    roundSleeve: { type: Number },
-    sleeveLength: { type: Number },
-    blouseLength: { type: Number },
-    hips: { type: Number },
-    skirtLength: { type: Number },
-    skirtWaist: { type: Number },
-    fullGownLength: { type: Number },
-    shortGownLength: { type: Number },
-    trouserLength: { type: Number },
-    laps: { type: Number },
-    knee: { type: Number },
-    ankle: { type: Number },
+    bust: { type: String },
+    roundUnderBust: { type: String },
+    waist: { type: String },
+    shoulderToUnderBust: { type: String },
+    halfLength: { type: String },
+    bustPoint: { type: String },
+    shoulder: { type: String },
+    roundSleeve: { type: String },
+    sleeveLength: { type: String },
+    blouseLength: { type: String },
+    hips: { type: String },
+    skirtLength: { type: String },
+    skirtWaist: { type: String },
+    fullGownLength: { type: String },
+    shortGownLength: { type: String },
+    trouserLength: { type: String },
+    laps: { type: String },
+    knee: { type: String },
+    ankle: { type: String },
   },
   { _id: false }
 );
@@ -37,4 +37,7 @@ const CustomerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+if (mongoose.models && mongoose.models.Customer) {
+  delete mongoose.models.Customer;
+}
 export default mongoose.models.Customer || mongoose.model("Customer", CustomerSchema);
