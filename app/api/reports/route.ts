@@ -5,6 +5,12 @@ import Order from "@/lib/models/Order";
 import Customer from "@/lib/models/Customer";
 import { verifyToken } from "@/lib/auth";
 
+const parseSafeDate = (dateVal: any, fallbackDate: Date): Date => {
+  if (!dateVal) return fallbackDate;
+  const d = new Date(dateVal);
+  return isNaN(d.getTime()) ? fallbackDate : d;
+};
+
 export async function GET() {
   try {
     const cookieStore = await cookies();
@@ -43,11 +49,12 @@ export async function GET() {
     for (const order of orders) {
       const invNum = order.invoiceNumber || "unknown";
       const clientName = order.customer?.name || "Unknown Customer";
+      const fallback = order.createdAt ? new Date(order.createdAt) : (order.date ? new Date(order.date) : new Date());
 
       // 1. Process Payments (Inflows)
       if (order.payments && order.payments.length > 0) {
         for (const payment of order.payments) {
-          const pDate = new Date(payment.date);
+          const pDate = parseSafeDate(payment.date, fallback);
           const dateStr = pDate.toISOString().split("T")[0];
           const weekStr = getWeekCommencingDate(new Date(pDate));
           const monthStr = dateStr.substring(0, 7); // YYYY-MM
@@ -104,7 +111,7 @@ export async function GET() {
       // 2. Process Expenses (Outflows)
       if (order.expenses && order.expenses.length > 0) {
         for (const expense of order.expenses) {
-          const eDate = new Date(expense.date);
+          const eDate = parseSafeDate(expense.date, fallback);
           const dateStr = eDate.toISOString().split("T")[0];
           const weekStr = getWeekCommencingDate(new Date(eDate));
           const monthStr = dateStr.substring(0, 7); // YYYY-MM
